@@ -1,15 +1,16 @@
 <script lang="ts">
+    import { Button } from "$lib/components/ui/button/index.js";
     import {
         Home,
-        LayoutDashboard,
         Briefcase,
         Banknote,
         Settings2,
         Bell,
-        LogOut,
-        CircleUserRound
+        CircleUserRound,
+        Sun,
+        Moon
 	} from "lucide-svelte";
-    import { Separator } from "$lib/components/ui/separator";
+    import { toggleMode } from "mode-watcher";
 </script>
 <div class="w-12 fixed h-screen bg-white overflow-hidden border-r z-50 hover:w-40  hover:shadow-lg hover:border-none transition-all">
 	<div class="w-40 flex flex-col h-full">
@@ -26,6 +27,18 @@
             <li class="px-4 py-3"><a href="/dashboard/nortifications" class="text-slate-600 hover:text-current"><Bell class="inline mr-4" size={16}/>Nortifications</a></li>
         </ul>
         <ul class="text-sm mt-auto mb-4">
+            <li class="pl-1">
+                <Button on:click={toggleMode} variant="ghost" size="icon">
+                    <Sun
+                      class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+                    />
+                    <Moon
+                      class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+                    />
+                    
+                </Button>
+                <span>Toggle theme</span>
+            </li>
             <li class="pl-3 py-3"><a href="/account" class="text-slate-600 hover:text-current"><CircleUserRound class="inline mr-4" size={24} /><a href="/account">Account Page</a></li>
         </ul>
     </div>

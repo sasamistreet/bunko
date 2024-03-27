@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { page } from "$app/stores";
+    //import { page } from "$app/stores";
     import * as Form from "$lib/components/ui/form";
     import { stepDetailSchema, type StepDetailSchema } from "./schema";
     import{
@@ -14,12 +14,11 @@
     });
     const { form: formData, enhance } = form;
     //export let form: SuperValidated<StepDetailSchema> = $page.data;
-    import { onMount, onDestroy, getContext } from 'svelte';
+    //import { onMount, onDestroy, getContext } from 'svelte';
 
     import * as ContextMenu from "$lib/components/ui/context-menu";
     import { Textarea } from "$lib/components/ui/textarea";
     import { Label } from "$lib/components/ui/label";
-    import * as Select from "$lib/components/ui/select";
     import { Slider } from "$lib/components/ui/slider";
     import { Input } from "$lib/components/ui/input";
     import { Button } from "$lib/components/ui/button";
@@ -55,12 +54,14 @@
 
     let svgContent = 'Ctrl+Vで貼り付け';
 
-    function handlePaste(event) {
-        const clipboardData = event.clipboardData || window.clipboardData;
-        const pastedData = clipboardData.getData('Text');
-
-        if (pastedData.startsWith('<svg')) {
-        svgContent = pastedData;
+    function handlePaste(event: ClipboardEvent) {
+        const clipboardData = event.clipboardData;
+        let pastedData:string | null = null
+        if (clipboardData){
+          pastedData = clipboardData.getData('Text');
+          if (pastedData.startsWith('<svg')) {
+            svgContent = pastedData;
+          }
         }
     }
 
@@ -82,7 +83,7 @@
     <form method="POST" use:enhance>
       <Form.Field {form} name="id">
         <Form.Control let:attrs>
-          <Input id="id" type="hidden" value={$formData.id}/>
+          <Input {...attrs} type="hidden" bind:value={$formData.id}/>
         </Form.Control>
       </Form.Field>
       <Tabs.Root value="diagram" class="w-full">
@@ -111,9 +112,7 @@
                   </div>
               </div>
             <ContextMenu.Root>
-              <ContextMenu.Trigger
-                class="flex h-[480px] w-[480px] items-center justify-center rounded-md border border-dashed text-sm"
-              >
+              <ContextMenu.Trigger class="flex h-[480px] w-[480px] items-center justify-center rounded-md border border-dashed text-sm">
                 Click to Paste
               </ContextMenu.Trigger>
               <ContextMenu.Content class="w-64">
@@ -154,7 +153,7 @@
                     <Form.Control let:attrs>
                       <Label class="[&:has([data-state=checked])>div]:border-primary">
                         <RadioGroup.Item {...attrs} value="FORWARD" class="sr-only" />
-                        <div class="items-center align-center rounded-full p-1 border-2 border-muted hover:bg-accent">
+                        <div class="flex items-center justify-center rounded-full p-1 border-2 border-muted hover:bg-accent">
                           <ChevronRight />
                         </div>
                         <span class="block w-full p-2 text-center font-normal">Forward</span>
@@ -163,7 +162,7 @@
                     <Form.Control let:attrs>
                       <Label class="[&:has([data-state=checked])>div]:border-primary">
                         <RadioGroup.Item {...attrs} value="ENLARGE" class="sr-only" />
-                        <div class="items-center rounded-full p-1 border-2 hover:bg-accent">
+                        <div class="flex items-center justify-center rounded-full p-1 border-2 hover:bg-accent">
                           <Maximize2 />
                         </div>
                         <span class="block w-full p-2 text-center font-normal">Enlarge</span>
@@ -172,7 +171,7 @@
                     <Form.Control let:attrs>
                       <Label class="[&:has([data-state=checked])>div]:border-primary">
                         <RadioGroup.Item {...attrs} value="SHRINK" class="sr-only" />
-                        <div class="items-center rounded-full p-1 border-2 hover:bg-accent">
+                        <div class="flex items-center justify-center rounded-full p-1 border-2 hover:bg-accent">
                           <Minimize2 />
                         </div>
                         <span class="block w-full p-2 text-center font-normal">Shrink</span>
@@ -181,7 +180,7 @@
                     <Form.Control let:attrs>
                       <Label class="[&:has([data-state=checked])>div]:border-primary">
                         <RadioGroup.Item {...attrs} value="REPEAT" class="sr-only" />
-                        <div class="items-center rounded-full p-1 border-2 hover:bg-accent">
+                        <div class="flex items-center justify-center rounded-full p-1 border-2 hover:bg-accent">
                           <Undo2 />
                         </div>
                         <span class="block w-full p-2 text-center font-normal">Repeat</span>
@@ -190,7 +189,7 @@
                     <Form.Control let:attrs>
                       <Label class="[&:has([data-state=checked])>div]:border-primary">
                         <RadioGroup.Item {...attrs} value="TURN" class="sr-only" />
-                        <div class="items-center rounded-full p-1 border-2 hover:bg-accent">
+                        <div class="flex items-center justify-center rounded-full p-1 border-2 hover:bg-accent">
                           <Repeat />
                         </div>
                         <span class="block w-full p-2 text-center font-normal">Turn</span>
@@ -199,7 +198,7 @@
                     <Form.Control let:attrs>
                       <Label class="[&:has([data-state=checked])>div]:border-primary">
                         <RadioGroup.Item {...attrs} value="EROTATE" class="sr-only" />
-                        <div class="items-center rounded-full p-1 border-2 hover:bg-accent">
+                        <div class="flex items-center justify-center rounded-full p-1 border-2 hover:bg-accent">
                           <RefreshCw />
                         </div>
                         <span class="block w-full p-2 text-center font-normal">Rotate</span>
@@ -208,7 +207,7 @@
                     <Form.Control let:attrs>
                       <Label class="[&:has([data-state=checked])>div]:border-primary">
                         <RadioGroup.Item {...attrs} value="COMPLETED" class="sr-only" />
-                        <div class="items-center rounded-full p-1 border-2 hover:bg-accent">
+                        <div class="flex items-center justify-center rounded-full p-1 border-2 hover:bg-accent">
                           <BadgeCheck />
                         </div>
                         <span class="block w-full p-2 text-center font-normal">Completed</span>
@@ -249,7 +248,7 @@
         <Form.Field {form} name="caption">
           <Form.Control let:attrs>
             <Form.Label for="caption">Caption</Form.Label>
-            <Textarea id="caption" name="caption" value={$formData.caption} />
+            <Textarea {...attrs} bind:value={$formData.caption}/>
           </Form.Control>
         </Form.Field>
       </div>
