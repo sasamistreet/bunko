@@ -2,19 +2,14 @@
     //import { page } from "$app/stores";
     import * as Form from "$lib/components/ui/form";
     import { stepDetailSchema, type StepDetailSchema } from "./schema";
-    import{
-      type SuperValidated,
-      type Infer,
-      superForm,
-    } from "sveltekit-superforms";
+    import{ type SuperValidated, type Infer, superForm, } from "sveltekit-superforms";
     import { zodClient } from "sveltekit-superforms/adapters";
     export let data: SuperValidated<Infer<StepDetailSchema>>;
     const form = superForm(data, {
+      resetForm: false,
       validators: zodClient(stepDetailSchema),
     });
     const { form: formData, enhance } = form;
-    //export let form: SuperValidated<StepDetailSchema> = $page.data;
-    //import { onMount, onDestroy, getContext } from 'svelte';
 
     import * as ContextMenu from "$lib/components/ui/context-menu";
     import { Textarea } from "$lib/components/ui/textarea";
@@ -27,7 +22,6 @@
     import { toast } from "svelte-sonner";
     import * as RadioGroup from "$lib/components/ui/radio-group";
     import { ChevronRight, ClipboardPaste,Upload, Trash2, MoreVertical, Maximize2, Minimize2, Undo2, Repeat, IterationCw, RefreshCw, RefreshCcw, BadgeCheck} from "lucide-svelte";
-	  //import FormButton from "$lib/components/ui/form/form-button.svelte";
     const transitionList = [
       { value: "FORWARD", label: "Forward", icon:"ChevronRight" },
       { value: "ENLARGE", label: "Enlarge", icon:"Maximize2"},
@@ -252,6 +246,7 @@
           </Form.Control>
         </Form.Field>
       </div>
-      <Form.Button class="mt-8" on:click={() => toast("Saved!")}>Submit</Form.Button>
+      <Form.Button class="mt-8">Submit</Form.Button>
     </form>
+    <Button class="mt-8" on:click={() => toast("Saved!")}>Sonner</Button>
   </div>

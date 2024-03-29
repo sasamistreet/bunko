@@ -61,12 +61,7 @@ export const actions: Actions = {
       console.log("no form data")
     } else {
       //update step
-      const { error } = await supabase
-        .from('Step')
-        .update({
-          caption: caption
-        })
-        .eq('id', form.data.id)
+      const { error } = await supabase.from('Step').update({ caption: caption }).eq('id', form.data.id)
       if (error) {
         return fail(500, {
           caption,
@@ -75,11 +70,10 @@ export const actions: Actions = {
       } else {
         console.log(caption)
         console.log("success!")
+        return {
+          form
+        };
       }
-      
     }
-    return {
-      form
-    };
   }
 };

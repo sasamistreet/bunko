@@ -2,7 +2,6 @@
     import { Button } from "$lib/components/ui/button";
     import {page} from '$app/stores'
 </script>
-
 <div class="">
   <div class="flex">
     <div class="min-w-[240px] pr-4">
