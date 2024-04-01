@@ -1,7 +1,7 @@
 import { supabase } from "$lib/server/supabaseClient";
 import type { PageServerLoad, Actions } from "./$types";
 import { fail } from "@sveltejs/kit";
-import { superValidate } from "sveltekit-superforms/server";
+import { message, superValidate } from "sveltekit-superforms/server";
 import { stepDetailSchema } from "./schema";
 import { zod } from 'sveltekit-superforms/adapters';
 
@@ -32,7 +32,7 @@ async function getFeatured(path:string){
   } catch (error) {
 
   }
-})  satisfies PageServerLoad;*/
+}) satisfies PageServerLoad;*/
 
 async function getSingleStep(workId: number, step: number){
   const{ data, error } = await supabase.from("Step").select().match({ workId: workId, step: step }).single();
@@ -68,11 +68,7 @@ export const actions: Actions = {
         })
         console.log("error!")
       } else {
-        console.log(caption)
-        console.log("success!")
-        return {
-          form
-        };
+        return message(form, { text: 'Updated'});
       }
     }
   }
