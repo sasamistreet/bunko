@@ -4,39 +4,38 @@ import { fail } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms/server";
 import { stepDetailSchema } from "./schema";
 import { zod } from 'sveltekit-superforms/adapters';
+import { createEventDispatcher } from 'svelte'
 
-async function getWork(workId:Number){
-  const{ data, error } = await supabase.from("Work").select().eq('id', workId).single();
-  return data;
-}
-
-async function getStep(stepId:Number){
-  const{ data, error } = await supabase.from("Step").select().eq('id', stepId).single();
-  return data;
-}
-
-async function getStorage(){
-  const { data } = await supabase.storage.from('works').getBucket();
-  return data;
-}
-
-async function getFeatured(path:string){
-  const { data } = await supabase.storage.from('works').getPublicUrl(path);
-  return data;
-}
-
-/*export const load = (async ({ locals, params }) => {
-  try {
-      const featured = getFeatured("work/Apple_logo_black.svg");
-      return { featured } ;
-  } catch (error) {
-
-  }
-}) satisfies PageServerLoad;*/
 
 async function getSingleStep(workId: number, step: number){
   const{ data, error } = await supabase.from("Step").select().match({ workId: workId, step: step }).single();
   return data;
+}
+
+async function uploadSVG(svgContent:string) {
+  const dispatch = createEventDispatcher()
+  try {
+
+    if (!svgContent || svgContent.length === 0) {
+      throw new Error('You must select an image to upload.')
+    }
+
+    const filePath = `${Math.random()}.svg`
+
+    const { error } = await supabase.storage.from('works').upload(filePath, svgContent)
+
+    if (error) {
+      throw error
+    }
+    setTimeout(() => {
+      dispatch('')
+    }, 100)
+    return filePath;
+  } catch (error) {
+    if (error instanceof Error) {
+      alert(error.message)
+    }
+  }
 }
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -50,18 +49,29 @@ export const actions: Actions = {
     const form =  await superValidate(event, zod(stepDetailSchema));
     const transition = form.data.transition as string
     const caption = form.data.caption as string
+    const figure_svg_path = await uploadSVG(form.data.svgContent as string)
     if (!form.valid) {
       return fail(400, {
         form
       });
       console.log("no form")
     }
+
+    try {
+      const { error } = await supabase.from('Step').update({ transition:transition, caption: caption, figure_svg_path:figure_svg_path }).eq('id', form.data.id)
+      return message(form, { text: 'Updated'});
+    } catch (error) {
+      if (error instanceof Error) {
+				console.log(error.message)
+			}
+    }
     
-    if (!form.data.id) {
+    /*if (!form.data.id) {
       //create step
       console.log("no form data")
     } else {
       //update step
+      
       const { error } = await supabase.from('Step').update({ transition:transition, caption: caption }).eq('id', form.data.id)
       if (error) {
         return fail(500, {
@@ -71,6 +81,6 @@ export const actions: Actions = {
       } else {
         return message(form, { text: 'Updated'});
       }
-    }
+    }*/
   }
 };

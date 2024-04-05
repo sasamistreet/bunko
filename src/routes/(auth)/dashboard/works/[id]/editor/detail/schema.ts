@@ -8,6 +8,8 @@ export const stepDetailSchema = z.object({
     workId: z.number().nullable(),
     step: z.number().nullable(),
     media_default: z.enum(mediatype).nullable(),
+    svgContent: z.string().optional(),
+    figure_svg_path: z.string().optional(),
     media_diagram: z.string().nullable(),
     media_photo: z.string().nullable(),
     media_video: z.string().nullable(),

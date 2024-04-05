@@ -60,29 +60,27 @@
         if (clipboardData){
           pastedData = clipboardData.getData('Text');
           if (pastedData.startsWith('<svg') || pastedData.startsWith('<?xml')) {
-            console.log("collect");
+            $formData.svgContent = pastedData;
             svgContent = pastedData;
+            uploadSVG;
           } else {
             svgContent = "Paste SVG!"
-            console.log("o SVG!")
           }
         } else {
           svgContent = "No Data"
         }
     }
 
-  export let size:number = 10
 	export let url: string
   export let supabase: SupabaseClient
 	let avatarUrl: string | null = null
 	let uploading = false
-	let files: FileList
 
 	const dispatch = createEventDispatcher()
 
   const downloadImage = async (path: string) => {
 		try {
-			const { data, error } = await supabase.storage.from('avatars').download(path)
+			const { data, error } = await supabase.storage.from('works').download(path)
 
 			if (error) {
 				throw error
@@ -97,19 +95,17 @@
 		}
 	}
 
-    const uploadAvatar = async () => {
+  const uploadSVG = async () => {
 		try {
 			uploading = true
 
-			if (!files || files.length === 0) {
+			if (!svgContent || svgContent.length === 0) {
 				throw new Error('You must select an image to upload.')
 			}
 
-			const file = files[0]
-			const fileExt = file.name.split('.').pop()
-			const filePath = `${Math.random()}.${fileExt}`
+			const filePath = `${Math.random()}.svg`
 
-			const { error } = await supabase.storage.from('avatars').upload(filePath, file)
+			const { error } = await supabase.storage.from('works').upload(filePath, svgContent)
 
 			if (error) {
 				throw error
@@ -127,7 +123,7 @@
 			uploading = false
 		}
 	}
-
+  $: if (url) downloadImage(url)
 </script>
 <div class="p-4 bg-white shadow">
     <div class="flex justify-between">
@@ -167,7 +163,7 @@
               <div on:paste={handlePaste}>
               <ContextMenu.Root>
                 <ContextMenu.Trigger class="flex h-[480px] w-[480px] rounded-md border border-dashed text-sm">
-                  {@html svgContent}
+                  {@html $formData.svgContent}
                 </ContextMenu.Trigger>
                 <ContextMenu.Content class="w-64">
                   <ContextMenu.Item inset>
@@ -176,6 +172,11 @@
                   </ContextMenu.Item>
                 </ContextMenu.Content>
               </ContextMenu.Root>
+              <Form.Field {form} name="figure_svg_path">
+              <Form.Control let:attrs>
+                <Input {...attrs} type="hidden" bind:value={$formData.figure_svg_path}/>
+              </Form.Control>
+              </Form.Field>
             </div>
             </div>
             <div class="grow">
@@ -196,26 +197,7 @@
                 <Label for="y">Y:</Label>
                 <Input id="y" class="my-2 p-1 h-8 w-24 inline"/>
               </div>
-              <Form.Fieldset {form} name="transition" class="mt-8">
-                <Form.Legend>Transition</Form.Legend>
-                <Form.Description>Select transition to next step.</Form.Description>
-                <Form.FieldErrors />
-                
-                <RadioGroup.Root class="grid max-w-md grid-cols-4 justify-content-center gap-8 pt-2" orientation="horizontal" bind:value={$formData.transition}>
-                  {#each transitions as transition}
-                  <Form.Control let:attrs>
-                    <Label class="[&:has([data-state=checked])>div]:border-primary">
-                      <RadioGroup.Item {...attrs} value="{transition.value}" class="sr-only" />
-                      <div class="flex items-center justify-center rounded-full p-1 border-2 border-muted hover:bg-accent">
-                        <svelte:component this={transition.icon} />
-                      </div>
-                      <span class="block w-full p-2 text-center font-normal">{transition.label}</span>
-                    </Label>
-                  </Form.Control>
-                  {/each}
-                  <RadioGroup.Input name="transition" />
-                </RadioGroup.Root>
-              </Form.Fieldset>
+              
             </div>
           </div>
         </Tabs.Content>
@@ -252,6 +234,26 @@
           </Form.Control>
         </Form.Field>
       </div>
+      <Form.Fieldset {form} name="transition" class="mb-4">
+        <Form.Legend>Transition</Form.Legend>
+        <Form.Description>Select transition to next step.</Form.Description>
+        <Form.FieldErrors />
+        
+        <RadioGroup.Root class="grid grid-cols-6 justify-content-center gap-8 pt-2" orientation="horizontal" bind:value={$formData.transition}>
+          {#each transitions as transition}
+          <Form.Control let:attrs>
+            <Label class="[&:has([data-state=checked])>div]:border-primary">
+              <RadioGroup.Item {...attrs} value="{transition.value}" class="sr-only" />
+              <div class="flex items-center justify-center rounded-full p-1 border-2 border-muted hover:bg-accent">
+                <svelte:component this={transition.icon} />
+              </div>
+              <span class="block w-full p-2 text-center font-normal">{transition.label}</span>
+            </Label>
+          </Form.Control>
+          {/each}
+          <RadioGroup.Input name="transition" />
+        </RadioGroup.Root>
+      </Form.Fieldset>
       <Form.Button class="mt-8">Submit</Form.Button>
     </form>
   </div>
