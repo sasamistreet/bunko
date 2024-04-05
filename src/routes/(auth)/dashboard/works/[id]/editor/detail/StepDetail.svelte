@@ -1,6 +1,8 @@
 <script lang="ts">
     //import { page } from "$app/stores";
     import * as Form from "$lib/components/ui/form";
+    import { createEventDispatcher } from 'svelte'
+    import type { SupabaseClient } from '@supabase/supabase-js'
     import { stepDetailSchema, type StepDetailSchema } from "./schema";
     import{ type SuperValidated, type Infer, superForm, } from "sveltekit-superforms";
     import { zodClient } from "sveltekit-superforms/adapters";
@@ -20,7 +22,7 @@
         }
       }
     });
-    const { form: formData, message, enhance } = form;
+    const { form: formData, enhance } = form;
 
     import * as ContextMenu from "$lib/components/ui/context-menu";
     import { Textarea } from "$lib/components/ui/textarea";
@@ -32,8 +34,11 @@
     import { Switch } from "$lib/components/ui/switch";
     import { toast } from "svelte-sonner";
     import * as RadioGroup from "$lib/components/ui/radio-group";
+    import { type ComponentType } from 'svelte';
+    import type { Icon } from "lucide-svelte";
     import { ChevronRight, ClipboardPaste,Upload, Trash2, MoreVertical, Maximize2, Minimize2, Undo2, Repeat, RefreshCw, BadgeCheck, IterationCcw, IterationCw} from "lucide-svelte";
-    const transitions = [
+    type transitionType = Array<{value:string, label:string, icon: ComponentType<Icon>}>;
+    const transitions:transitionType = [
       { value: "FORWARD", label: "Forward", icon:ChevronRight },
       { value: "ENLARGE", label: "Enlarge", icon:Maximize2},
       { value: "SHRINK", label: "Shrink", icon:Minimize2 },
@@ -48,16 +53,80 @@
 
     let svgContent = 'Ctrl+Vで貼り付け';
 
-    function handlePaste(event: ClipboardEvent) {
+    function handlePaste(event:ClipboardEvent) {
+        //var pasteEvent = new ClipboardEvent('paste');
         const clipboardData = event.clipboardData;
-        let pastedData:string | null = null
+        let pastedData:string | undefined
         if (clipboardData){
           pastedData = clipboardData.getData('Text');
-          if (pastedData.startsWith('<svg')) {
+          if (pastedData.startsWith('<svg') || pastedData.startsWith('<?xml')) {
+            console.log("collect");
             svgContent = pastedData;
+          } else {
+            svgContent = "Paste SVG!"
+            console.log("o SVG!")
           }
+        } else {
+          svgContent = "No Data"
         }
     }
+
+  export let size:number = 10
+	export let url: string
+  export let supabase: SupabaseClient
+	let avatarUrl: string | null = null
+	let uploading = false
+	let files: FileList
+
+	const dispatch = createEventDispatcher()
+
+  const downloadImage = async (path: string) => {
+		try {
+			const { data, error } = await supabase.storage.from('avatars').download(path)
+
+			if (error) {
+				throw error
+			}
+
+			const url = URL.createObjectURL(data)
+			avatarUrl = url
+		} catch (error) {
+			if (error instanceof Error) {
+				console.log('Error downloading image: ', error.message)
+			}
+		}
+	}
+
+    const uploadAvatar = async () => {
+		try {
+			uploading = true
+
+			if (!files || files.length === 0) {
+				throw new Error('You must select an image to upload.')
+			}
+
+			const file = files[0]
+			const fileExt = file.name.split('.').pop()
+			const filePath = `${Math.random()}.${fileExt}`
+
+			const { error } = await supabase.storage.from('avatars').upload(filePath, file)
+
+			if (error) {
+				throw error
+			}
+
+			url = filePath
+			setTimeout(() => {
+				dispatch('upload')
+			}, 100)
+		} catch (error) {
+			if (error instanceof Error) {
+				alert(error.message)
+			}
+		} finally {
+			uploading = false
+		}
+	}
 
 </script>
 <div class="p-4 bg-white shadow">
@@ -85,7 +154,7 @@
                       <Button variant="ghost" size="icon">
                           <ClipboardPaste size={16} />
                       </Button>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" on:click={handlePaste}>
                           <Upload size={16}/>
                       </Button>
                   </div>
@@ -95,17 +164,19 @@
                       </Button>
                   </div>
               </div>
-            <ContextMenu.Root>
-              <ContextMenu.Trigger class="flex h-[480px] w-[480px] items-center justify-center rounded-md border border-dashed text-sm">
-                Click to Paste
-              </ContextMenu.Trigger>
-              <ContextMenu.Content class="w-64">
-                <ContextMenu.Item inset>
-                  Paste
-                  <ContextMenu.Shortcut>⌘V</ContextMenu.Shortcut>
-                </ContextMenu.Item>
-              </ContextMenu.Content>
-            </ContextMenu.Root>
+              <div on:paste={handlePaste}>
+              <ContextMenu.Root>
+                <ContextMenu.Trigger class="flex h-[480px] w-[480px] rounded-md border border-dashed text-sm">
+                  {@html svgContent}
+                </ContextMenu.Trigger>
+                <ContextMenu.Content class="w-64">
+                  <ContextMenu.Item inset>
+                    Paste
+                    <ContextMenu.Shortcut>⌘V</ContextMenu.Shortcut>
+                  </ContextMenu.Item>
+                </ContextMenu.Content>
+              </ContextMenu.Root>
+            </div>
             </div>
             <div class="grow">
               <h4>Default Viewport</h4>

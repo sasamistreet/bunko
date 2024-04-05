@@ -16,7 +16,7 @@ export const stepDetailSchema = z.object({
     position_y: z.number().nullable(),
     angle: z.number().nullable(),
     caption: z.string().min(0).max(200).nullable(),
-    transition: z.enum(transitions).nullable(),
+    transition: z.enum(transitions).optional(),
     transition_caption: z.string().min(0).max(10).nullable(),
 });
 export type StepDetailSchema = typeof stepDetailSchema;

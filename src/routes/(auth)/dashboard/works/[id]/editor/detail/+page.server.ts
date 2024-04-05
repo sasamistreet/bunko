@@ -48,6 +48,7 @@ export const load: PageServerLoad = async ({ params }) => {
 export const actions: Actions = {
   default: async (event) => {
     const form =  await superValidate(event, zod(stepDetailSchema));
+    const transition = form.data.transition as string
     const caption = form.data.caption as string
     if (!form.valid) {
       return fail(400, {
@@ -61,7 +62,7 @@ export const actions: Actions = {
       console.log("no form data")
     } else {
       //update step
-      const { error } = await supabase.from('Step').update({ caption: caption }).eq('id', form.data.id)
+      const { error } = await supabase.from('Step').update({ transition:transition, caption: caption }).eq('id', form.data.id)
       if (error) {
         return fail(500, {
           caption,
