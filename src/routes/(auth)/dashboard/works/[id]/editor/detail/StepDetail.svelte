@@ -12,11 +12,11 @@
       validators: zodClient(stepDetailSchema),
       onUpdated({ form }) {
         if (form.message) {
-          toast.success("Event has been created", {
+          toast.success("保存されました", {
             description: form.message.text,
             action: {
               label: "Undo",
-              onClick: () => console.info("Undo")
+              onClick: () => console.info("OK")
             }
           });
         }
