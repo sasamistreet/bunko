@@ -12,28 +12,31 @@ async function getSingleStep(workId: number, step: number){
   return data;
 }
 
-async function uploadSVG(svgContent:string) {
-  const dispatch = createEventDispatcher()
+async function uploadSVG(svgContent:string|undefined) {
+  //const dispatch = createEventDispatcher()
   try {
 
     if (!svgContent || svgContent.length === 0) {
       throw new Error('You must select an image to upload.')
     }
 
+    //const blob = new Blob([svgContent], { type : 'image/svg+xml' });
     const filePath = `${Math.random()}.svg`
-
-    const { error } = await supabase.storage.from('works').upload(filePath, svgContent)
+    const { error } = await supabase.storage.from('works').upload(filePath, svgContent, {contentType: 'image/svg+xml'})
 
     if (error) {
       throw error
+    } else {
+      console.log("success");
+      return filePath;
     }
-    setTimeout(() => {
-      dispatch('')
-    }, 100)
-    return filePath;
+    /*setTimeout(() => {
+      //dispatch('')
+    }, 100)*/
+    
   } catch (error) {
     if (error instanceof Error) {
-      alert(error.message)
+      console.log(error.message)
     }
   }
 }
@@ -49,7 +52,9 @@ export const actions: Actions = {
     const form =  await superValidate(event, zod(stepDetailSchema));
     const transition = form.data.transition as string
     const caption = form.data.caption as string
-    const figure_svg_path = await uploadSVG(form.data.svgContent as string)
+    const svgContent = form.data.svgContent
+    let figure_svg_path:string = ""
+    const {locals: { supabase } } = event
     if (!form.valid) {
       return fail(400, {
         form
@@ -57,13 +62,33 @@ export const actions: Actions = {
       console.log("no form")
     }
 
+    
+
     try {
-      const { error } = await supabase.from('Step').update({ transition:transition, caption: caption, figure_svg_path:figure_svg_path }).eq('id', form.data.id)
+      if (!svgContent || svgContent.length === 0) {
+        throw new Error('You must select an image to upload.')
+      }
+      const { data } = await supabase.auth.getSession()
+      if (data.session){
+        const blob = new Blob([svgContent], { type : 'image/svg+xml' });
+  
+        const filePath = `wwwwww.svg`
+        const { error }  = await supabase.storage.from('works').upload(`work/${filePath}`, svgContent, { contentType : 'image/svg+xml', upsert: true, })
+        //const { error }  = await supabase.storage.from('works').remove(['work/Apple_logo_black.svg'])
+        if (error) {
+          throw error;
+        }
+      } else {
+        console.log(data)
+      }
+      
+
+      //const { error } = await supabase.from('Step').update({ transition:transition, caption: caption, figure_svg_path:filePath }).eq('id', form.data.id)
+      console.log(caption);
+      console.log(figure_svg_path);
       return message(form, { text: 'Updated'});
     } catch (error) {
-      if (error instanceof Error) {
-				console.log(error.message)
-			}
+        console.log(error)
     }
     
     /*if (!form.data.id) {

@@ -52,6 +52,7 @@
     let scaleArray = [scale]
 
     let svgContent = 'Ctrl+Vで貼り付け';
+    $formData.svgContent = 'Ctrl+Vで貼り付け';
 
     function handlePaste(event:ClipboardEvent) {
         //var pasteEvent = new ClipboardEvent('paste');
@@ -62,7 +63,7 @@
           if (pastedData.startsWith('<svg') || pastedData.startsWith('<?xml')) {
             $formData.svgContent = pastedData;
             svgContent = pastedData;
-            uploadSVG;
+            //uploadSVG;
           } else {
             svgContent = "Paste SVG!"
           }
@@ -103,8 +104,8 @@
 				throw new Error('You must select an image to upload.')
 			}
 
+      //const blob = new Blob([svgContent], { type : 'image/svg+xml' });
 			const filePath = `${Math.random()}.svg`
-
 			const { error } = await supabase.storage.from('works').upload(filePath, svgContent)
 
 			if (error) {
@@ -115,6 +116,7 @@
 			setTimeout(() => {
 				dispatch('upload')
 			}, 100)
+      alert("success")
 		} catch (error) {
 			if (error instanceof Error) {
 				alert(error.message)
@@ -150,7 +152,7 @@
                       <Button variant="ghost" size="icon">
                           <ClipboardPaste size={16} />
                       </Button>
-                      <Button variant="ghost" size="icon" on:click={handlePaste}>
+                      <Button variant="ghost" size="icon">
                           <Upload size={16}/>
                       </Button>
                   </div>
@@ -172,11 +174,12 @@
                   </ContextMenu.Item>
                 </ContextMenu.Content>
               </ContextMenu.Root>
-              <Form.Field {form} name="figure_svg_path">
+              <Form.Field {form} name="svgContent">
               <Form.Control let:attrs>
-                <Input {...attrs} type="hidden" bind:value={$formData.figure_svg_path}/>
+                <Input {...attrs} type="hidden" bind:value={$formData.svgContent}/>
               </Form.Control>
               </Form.Field>
+              
             </div>
             </div>
             <div class="grow">
