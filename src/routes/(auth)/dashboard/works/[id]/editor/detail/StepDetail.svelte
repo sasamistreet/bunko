@@ -55,78 +55,66 @@
     $formData.svgContent = 'Ctrl+Vで貼り付け';
 
     function handlePaste(event:ClipboardEvent) {
-        //var pasteEvent = new ClipboardEvent('paste');
         const clipboardData = event.clipboardData;
         let pastedData:string | undefined
         if (clipboardData){
           pastedData = clipboardData.getData('Text');
           if (pastedData.startsWith('<svg') || pastedData.startsWith('<?xml')) {
-            $formData.svgContent = pastedData;
-            svgContent = pastedData;
-            //uploadSVG;
+            $formData.svgContent = resetScale(pastedData);
+            //$formData.svgContent = resetScale(pastedData)
           } else {
-            svgContent = "Paste SVG!"
+            $formData.svgContent = "Paste SVG!"
           }
         } else {
-          svgContent = "No Data"
+          $formData.svgContent = "No Data"
         }
     }
 
-	export let url: string
-  export let supabase: SupabaseClient
-	let avatarUrl: string | null = null
-	let uploading = false
+    function resetScale(svgText:string){
+      const domParser = new DOMParser();
+      const parsedSVGDoc:XMLDocument = domParser.parseFromString(svgText, 'image/svg+xml');
+      //const parsedSVG = parsedSVGDoc.childNodes[0];
+      const svgElement = parsedSVGDoc.getElementsByTagName("svg");
+      const element = svgElement[0];
+      if (parsedSVGDoc !== null) {
+        //element.setAttribute("width", "500");
+        //const width = element.getAttribute("width")
+        //const height = element.getAttribute("height")
+        //element.removeAttribute("height");
+        //element.setAttribute("viewBox", "0 0 "+width+" "+height)
+      }
+      
+      const newSVG = new XMLSerializer().serializeToString(parsedSVGDoc);
+      //return parsedSVG as string;
+      return newSVG
+    }
 
-	const dispatch = createEventDispatcher()
+    function deleteSVG(){
+      $formData.svgContent = 'Ctrl+Vで貼り付け';
+      moving = false;
+    }
 
-  const downloadImage = async (path: string) => {
-		try {
-			const { data, error } = await supabase.storage.from('works').download(path)
+    let left = 0;
+    let top = 0
+    let moving = false;
+    function onMouseDown() {
+          moving = true;
+          console.log(moving);
+    }
 
-			if (error) {
-				throw error
-			}
-
-			const url = URL.createObjectURL(data)
-			avatarUrl = url
-		} catch (error) {
-			if (error instanceof Error) {
-				console.log('Error downloading image: ', error.message)
-			}
-		}
-	}
-
-  const uploadSVG = async () => {
-		try {
-			uploading = true
-
-			if (!svgContent || svgContent.length === 0) {
-				throw new Error('You must select an image to upload.')
-			}
-
-      //const blob = new Blob([svgContent], { type : 'image/svg+xml' });
-			const filePath = `${Math.random()}.svg`
-			const { error } = await supabase.storage.from('works').upload(filePath, svgContent)
-
-			if (error) {
-				throw error
-			}
-
-			url = filePath
-			setTimeout(() => {
-				dispatch('upload')
-			}, 100)
-      alert("success")
-		} catch (error) {
-			if (error instanceof Error) {
-				alert(error.message)
-			}
-		} finally {
-			uploading = false
-		}
-	}
-  $: if (url) downloadImage(url)
+    function onMouseMove(e:MouseEvent) {
+        if (moving) {
+            left += e.movementX;
+            top += e.movementY;
+        }
+    }
+      
+    function onMouseUp() {
+          moving = false;
+          console.log(moving);
+    }
 </script>
+<svelte:window on:mousemove={onMouseMove}  on:mouseup={onMouseUp}/>
 <div class="p-4 bg-white shadow">
     <div class="flex justify-between">
       <h2 class="font-bold">1</h2>
@@ -152,20 +140,23 @@
                       <Button variant="ghost" size="icon">
                           <ClipboardPaste size={16} />
                       </Button>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" >
                           <Upload size={16}/>
                       </Button>
                   </div>
                   <div>
-                      <Button variant="ghost" size="icon" class="">
+                      <Button variant="ghost" size="icon" class="" on:click={deleteSVG}>
                           <Trash2 size={16}/>
                       </Button>
                   </div>
               </div>
+              
               <div on:paste={handlePaste}>
               <ContextMenu.Root>
-                <ContextMenu.Trigger class="flex h-[480px] w-[480px] rounded-md border border-dashed text-sm">
+                <ContextMenu.Trigger class="relative h-[480px] w-[480px] rounded-md border border-dashed text-sm overflow-hidden">
+                  <div class="cursor-move flex absolute min-h-[480px] min-w-[480px]"  role="presentation" style:left={left}px style:top={top}px on:mousedown={onMouseDown}>
                   {@html $formData.svgContent}
+                  </div>
                 </ContextMenu.Trigger>
                 <ContextMenu.Content class="w-64">
                   <ContextMenu.Item inset>
@@ -260,3 +251,5 @@
       <Form.Button class="mt-8">Submit</Form.Button>
     </form>
   </div>
+  <style>
+  </style>
