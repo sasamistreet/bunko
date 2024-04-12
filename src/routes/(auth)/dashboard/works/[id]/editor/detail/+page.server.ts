@@ -4,15 +4,14 @@ import { fail } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms/server";
 import { stepDetailSchema } from "./schema";
 import { zod } from 'sveltekit-superforms/adapters';
-import { createEventDispatcher } from 'svelte'
 
 
-async function getSingleStep(workId: number, step: number){
+async function getSingleStep(workId: string, step: number){
   const{ data, error } = await supabase.from("Step").select().match({ workId: workId, step: step }).single();
   return data;
 }
 
-/*async function uploadSVG(event:any, svgContent:string|undefined):Promise<string|undefined> {
+/*const uploadSVG = async ( SVGContent, { locals }) => {
   try {
     if (!svgContent || svgContent.length === 0) {
       throw new Error('You must select an image to upload.')
@@ -35,8 +34,9 @@ async function getSingleStep(workId: number, step: number){
   }
 }*/
 
-export const load: PageServerLoad = async ({ params }) => {
-  const stepJson = await getSingleStep(1, 1);
+export const load: PageServerLoad = async ({ params, url }) => {
+  const step = Number(url.searchParams.get('step') ?? '0');
+  const stepJson = await getSingleStep(params.id, step);
   const form = await superValidate(stepJson, zod(stepDetailSchema));
   return { form };
 };

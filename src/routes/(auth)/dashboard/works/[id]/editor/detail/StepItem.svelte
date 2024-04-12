@@ -5,7 +5,7 @@
         import { Input } from "$lib/components/ui/input";
     </script>
     
-    <div class="flex mb-2 items-center">
+    <div class="flex mb-2 items-center" draggable="true">
       <div class="mr-2">
         <Checkbox class="border-slate-200"></Checkbox>
       </div>

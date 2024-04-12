@@ -1,8 +1,6 @@
 <script lang="ts">
     //import { page } from "$app/stores";
     import * as Form from "$lib/components/ui/form";
-    import { createEventDispatcher } from 'svelte'
-    import type { SupabaseClient } from '@supabase/supabase-js'
     import { stepDetailSchema, type StepDetailSchema } from "./schema";
     import{ type SuperValidated, type Infer, superForm, } from "sveltekit-superforms";
     import { zodClient } from "sveltekit-superforms/adapters";
@@ -51,7 +49,6 @@
     let scale = 100;
     let scaleArray = [scale]
 
-    let svgContent = 'Ctrl+Vで貼り付け';
     $formData.svgContent = 'Ctrl+Vで貼り付け';
 
     function handlePaste(event:ClipboardEvent) {
