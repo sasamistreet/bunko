@@ -6,8 +6,8 @@ import { stepDetailSchema } from "./schema";
 import { zod } from 'sveltekit-superforms/adapters';
 
 
-async function getSingleStep(workId: string, step: number){
-  const{ data, error } = await supabase.from("Step").select().match({ workId: workId, step: step }).single();
+async function getSingleStep(workId: string, id: string){
+  const{ data, error } = await supabase.from("Step").select().match({ workId: workId, id: id }).single();
   return data;
 }
 
@@ -35,8 +35,9 @@ async function getSingleStep(workId: string, step: number){
 }*/
 
 export const load: PageServerLoad = async ({ params, url }) => {
-  const step = Number(url.searchParams.get('step') ?? '0');
-  const stepJson = await getSingleStep(params.id, step);
+  //const step = Number(url.searchParams.get('step') ?? '0');
+  const id= url.searchParams.get('step') ?? '';
+  const stepJson = await getSingleStep(params.id, id);
   const form = await superValidate(stepJson, zod(stepDetailSchema));
   return { form };
 };

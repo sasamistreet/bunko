@@ -15,6 +15,18 @@ async function getSteps(stepId:string){
   }
 }
 
+async function getOrder(workId:string){
+  try {
+    const{ data, error } = await supabase.from("Work").select().eq('id', workId).select('order_drafted').single();
+    if (error) {
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 
 /*export const load = (async ({ locals, params }) => {
   try {
@@ -28,8 +40,8 @@ async function getSteps(stepId:string){
 
 export const load: PageServerLoad = async ({ params }) => {
   try {
-    const steps = await getSteps(params.id);
-    return { steps };
+    const steps = await getOrder(params.id);
+    return steps;
   } catch (error) {
 
   }

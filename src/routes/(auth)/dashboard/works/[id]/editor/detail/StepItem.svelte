@@ -10,7 +10,7 @@
         <Checkbox class="border-slate-200"></Checkbox>
       </div>
       <div class="flex bg-white rounded shadow grow">
-        <div class="w-12 flex flex-col items-center">
+        <div class="w-12 flex flex-col items-center cursor-grab">
           <ChevronUp size={16}></ChevronUp>
           <Input class="w-8 p-0 text-xs text-center"/>
           <ChevronDown size={16}></ChevronDown>
