@@ -1,77 +1,82 @@
 <script lang="ts">
     import StepItem from "./StepItem.svelte"
     import { Button } from "$lib/components/ui/button";
-    import { Trash2 } from "lucide-svelte";
+    import { Trash2, BetweenVerticalStart, CheckSquare, Plus } from "lucide-svelte";
+    import { writable } from "svelte/store";
+    import { quintOut } from "svelte/easing";
     import { flip } from 'svelte/animate';
     import type { PageData } from './$types';
-    import { get, writable } from "svelte/store";
-    import { quintOut } from "svelte/easing";
-    import { tick } from 'svelte';
-	import { number } from "zod";
-    export let data: PageData;
-    let steps = data.order_drafted.steps || [];
 
+    export let data: PageData;
+    let mode:string = "normal";
+    let steps = data.order_drafted.steps || [];
     let dragIndex = writable<number|null>(null);
 
     const dragStart = (index:number) => {
       $dragIndex = index;
-      //setDragImage() 
-      console.log(index)
     }
 
-    const dragEnter = (index:number) => {
+    const dragOver = (id:string) => {
+        const wrapper = document.getElementById(id);
+        wrapper?.classList.add("bg-blue-300");
+    }
+
+    const dragLeave = (id:string) => {
+        const wrapper = document.getElementById(id);
+        wrapper?.classList.remove("bg-blue-300");
+    }
+
+    
+    const dragEnd = (id:string) => {
+      const wrapper = document.getElementById(id);
+        wrapper?.classList.remove("bg-blue-300");
+    };
+
+    const drop = (index:number) =>{
       if (index === $dragIndex) return;
+      const wrapper = document.getElementById(steps[index].order);
+      wrapper?.classList.remove("bg-blue-300");
+
       let newSteps = JSON.parse(JSON.stringify(steps));
       const deleteElement = newSteps.splice($dragIndex, 1)[0]
       newSteps.splice(index, 0, deleteElement);
       steps = newSteps
-      //e.target.classList.add("opacity-30")
-      $dragIndex = index;
-    };
-    
-    const dragEnd = () => {
-      setTimeout(reorder, 4000)
       $dragIndex = null;
-    };
+    }
 
-    const drop = () =>{
-      //e.target.classList.remove("opacity-30")
-    }
-    const reorder = () => {
-      let i = 1;
-      for (const step of steps) {
-        step.order = i;
-        i++;
-      }
-      //steps = steps
-      console.log(steps);
-    }
 </script>
 <div class="flex justify-between">
-  <h1 class="text-xl font-bold">Title</h1>
-  <Button variant="ghost" size="icon"><Trash2 size={16}/></Button>
+  <div>
+    <Button variant="ghost" size="icon"><BetweenVerticalStart size={16} /></Button>
+    <Button variant="ghost" size="icon"><CheckSquare size="{16}"/></Button>
+    <Button variant="ghost" size="icon"><Trash2 size={16}/></Button>
+  </div>
 </div>
-<div class="grid grid-cols-5 gap-4">
+<div class="grid grid-cols-5 gap-y-4">
   {#each steps as step, index(step.order)}
-    <div draggable="true" role="presentation" id="{step.id}"
-      on:dragstart={() => dragStart(index)}
-      on:dragenter={() => dragEnter(index)}
-      on:dragover|preventDefault
-      on:dragend={dragEnd}
-      animate:flip={{ duration: 400, easing:quintOut }}
-    >
-    {#if $dragIndex == index}
-      <div class="flex flex-col mb-2 items-center grow">
-        <div class="w-full bg-muted">
-          aaa
-        </div>
+  <div class="flex" draggable="true" role="presentation" id="{step.id}"
+    on:dragstart={() => dragStart(index)}
+    on:dragover|preventDefault = {() => dragOver(step.order)}
+    on:dragleave={() => dragLeave(step.order)}
+    on:dragend={() => dragEnd(step.order)}
+    on:drop={() => drop(index)}
+    animate:flip={{ duration: 400, easing:quintOut }}
+  >
+  
+      <div id="{step.order}" class="group grid-divider grow h-full rounded flex-none place-content-center">
+        {#if mode==="insert"}
+        <button class="w-full h-full rounded bg-blue-300">+</button>
+        {/if}
       </div>
-    {:else}
-      <StepItem step={index} id={step.id} path={step.path}/>
-    {/if}
+  
+      <div>
+        <StepItem step={index+1} id={step.id} path={step.path}/>
+      </div>
   </div>
   {/each}
-  <div class="flex content-center">
-    <Button variant="outline" class="rounded-full mx-auto block">+</Button>
+  <div class="flex">
+    <div class=" flex place-items-center place-content-center w-full">
+    <button class="w-12 h-12 bg-white rounded-full shadow"><Plus class="inline" strokeWidth={1}/></button>
+  </div>
   </div>
 </div>
