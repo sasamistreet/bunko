@@ -11,7 +11,7 @@
         <li><a href="{$page.url.origin}/dashboard/works/{$page.params.id}/settings">Settings</a></li>
       </ul>
     </nav>
-    <div class="grow bg-muted">
+    <div class="grow">
         <slot />
     </div>
   </div>
