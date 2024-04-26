@@ -1,54 +1,55 @@
 <script lang="ts">
     import * as Form from "$lib/components/ui/form";
+    import { Input } from "$lib/components/ui/input";
+	import { Field } from "formsnap";
     import { formSchema, type FormSchema } from "./schema";
-    import type { SuperValidated } from "sveltekit-superforms";
-    export let form: SuperValidated<FormSchema>;
+    import {
+        type SuperValidated,
+        type Infer,
+        superForm,
+    } from "sveltekit-superforms";
+    import { zodClient } from "sveltekit-superforms/adapters";
+    export let data: SuperValidated<Infer<FormSchema>>;
+    export let form = superForm(data, {
+        validators: zodClient(formSchema),
+    });
+
+    const { form: formData, enhance } = form;
 </script>
-<Form.Root method="POST" {form} schema={formSchema} let:config>
-    <Form.Field {config} name="username">
-        <Form.Item>
+
+<form method="POST" use:enhance>
+    <Form.Field {form} name="user_id">
+        <Form.Control let:attrs>
             <Form.Label>Username</Form.Label>
-            <Form.Input />
-            <Form.Description>This is your public display name.</Form.Description>
-            <Form.Validation />
-        </Form.Item>
+            <Input {...attrs} bind:value={$formData.user_id}/>
+        </Form.Control>
+        <Form.Description>This is your public display name.</Form.Description>
+        <Form.FieldErrors />
     </Form.Field>
-    <Form.Field {config} name="accountname">
-        <Form.Item>
-            <Form.Label>Accountname</Form.Label>
-            <Form.Input />
-            <Form.Description>This is your public display name.</Form.Description>
-            <Form.Validation />
-        </Form.Item>
+    <Form.Field {form} name="user_name">
+        <Form.Control let:attrs>
+            <Form.Label>Account Name</Form.Label>
+            <Input {...attrs} bind:value={$formData.user_name}/>
+        </Form.Control>
+        <Form.Description>This is your public display name.</Form.Description>
+        <Form.FieldErrors />
     </Form.Field>
-    <Form.Field {config} name="x">
-        <Form.Item>
+    <Form.Field {form} name="x">
+        <Form.Control let:attrs>
             <Form.Label>X</Form.Label>
-            <Form.Input />
-            <Form.Description>X account</Form.Description>
-            <Form.Validation />
-        </Form.Item>
+            <Input {...attrs} bind:value={$formData.x}/>
+        </Form.Control>
+        <Form.Description>This is your public display name.</Form.Description>
+        <Form.FieldErrors />
     </Form.Field>
-    <Form.Field {config} name="instagram">
-        <Form.Item>
-            <Form.Label>Instagram</Form.Label>
-            <Form.Input />
-            <Form.Description>Instagram account</Form.Description>
-            <Form.Validation />
-        </Form.Item>
+    <Form.Field {form} name="instagram">
+        <Form.Control let:attrs>
+            <Form.Label>Account Name</Form.Label>
+            <Input {...attrs} bind:value={$formData.instagram}/>
+        </Form.Control>
+        <Form.Description>This is your public display name.</Form.Description>
+        <Form.FieldErrors />
     </Form.Field>
-    <Form.Field {config} name="description">
-        <Form.Item>
-            <Form.Label>Bio</Form.Label>
-            <Form.Textarea
-              placeholder="Tell us a little bit about yourself"
-              class="resize-none"
-            />
-            <Form.Description>
-              You can <span>@mention</span> other users and organizations.
-            </Form.Description>
-            <Form.Validation />
-          </Form.Item>
-    </Form.Field>
+
     <Form.Button>Submit</Form.Button>
-</Form.Root>
+</form>

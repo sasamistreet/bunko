@@ -26,7 +26,6 @@
         <h1 class="text-xl">Title</h1>
         <p class="text-xs">by <a href="/@user">author</a></p>
     </div>
-    <div class="text-emerald-400 align-bottom text-lg"><ThumbsUp fill="rgb(52 211 153)" strokeWidth={0} class="inline"/> 60%</div>
 </div>
 <div class="md:w-[640px] mx-auto flex gap-8 mb-8">
     <div class="w-2/3">

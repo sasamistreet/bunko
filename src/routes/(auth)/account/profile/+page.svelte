@@ -5,5 +5,5 @@
 </script>
 <div class="">
     <h2>Form</h2>
-    <ProfileForm form={data.form} />
+    <ProfileForm data={data.form} />
 </div>
