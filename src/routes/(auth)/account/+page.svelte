@@ -16,14 +16,3 @@
 	const profileRadioValue = "benoit";
 
 </script>
-<div>
-	<div>Name</div>
-	<div>id</div>
-	<div>email</div>
-	<div>Allow Contact</div>
-	<div>X</div>
-	<div>Instagram</div>
-	<div>Description</div>
-	<div>Allow Contact</div>
-	<div>Plan</div>
-</div>

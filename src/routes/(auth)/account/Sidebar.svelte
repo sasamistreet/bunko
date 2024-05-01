@@ -6,7 +6,7 @@
 
 </script>
 
-<div class="w-12 fixed h-full bg-white overflow-hidden border-r z-50 hover:w-40  hover:shadow-lg hover:border-none transition-all">
+<div class="w-12 pt-12 fixed h-full bg-white overflow-hidden border-r hover:w-40  hover:shadow-lg hover:border-none transition-all">
 	<div class="w-40 flex flex-col h-full pb-16">
 
 		<ul class="text-sm border-b">
@@ -19,10 +19,10 @@
 		</ul>
 		<ul class="leading-8 text-sm py-2 border-b">
 			<li><a href="/account/profile"><User size={16} class="inline mx-4 my-2"/>Profile</a></li>
-			<li><a href="/account/settings"><Settings size={16} class="inline mx-4 my-2"/>Settings</a></li>
-			<li><a href="/account/billing"><WalletCards size={16} class="inline mx-4 my-2"/>Billing</a></li>
-			<li><a href="/account/posts"><StickyNote size={16} class="inline mx-4 my-2"/>Posts</a></li>
-			<li><a href="/account/nortifications"><Bell size={16} class="inline mx-4 my-2"/>Nortifications</a></li>
+			<li><a href="/account/profile/settings"><Settings size={16} class="inline mx-4 my-2"/>Settings</a></li>
+			<li><a href="/account/profile/billing"><WalletCards size={16} class="inline mx-4 my-2"/>Billing</a></li>
+			<li><a href="/account/profile/posts"><StickyNote size={16} class="inline mx-4 my-2"/>Posts</a></li>
+			<li><a href="/account/profile/nortifications"><Bell size={16} class="inline mx-4 my-2"/>Nortifications</a></li>
 		</ul>
 
 		<ul class="text-sm mt-auto">

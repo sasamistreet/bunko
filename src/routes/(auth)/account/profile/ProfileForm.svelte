@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as Form from "$lib/components/ui/form";
     import { Input } from "$lib/components/ui/input";
-	import { Field } from "formsnap";
+    import { Textarea } from "$lib/components/ui/textarea";
     import { formSchema, type FormSchema } from "./schema";
     import {
         type SuperValidated,
@@ -44,8 +44,16 @@
     </Form.Field>
     <Form.Field {form} name="instagram">
         <Form.Control let:attrs>
-            <Form.Label>Account Name</Form.Label>
+            <Form.Label>Instagram</Form.Label>
             <Input {...attrs} bind:value={$formData.instagram}/>
+        </Form.Control>
+        <Form.Description>This is your public display name.</Form.Description>
+        <Form.FieldErrors />
+    </Form.Field>
+    <Form.Field {form} name="description">
+        <Form.Control let:attrs>
+            <Form.Label>Description</Form.Label>
+            <Textarea {...attrs} bind:value={$formData.instagram}/>
         </Form.Control>
         <Form.Description>This is your public display name.</Form.Description>
         <Form.FieldErrors />

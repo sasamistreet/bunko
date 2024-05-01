@@ -3,7 +3,12 @@
     import ProfileForm from "./ProfileForm.svelte";
     export let data: PageData;
 </script>
-<div class="">
-    <h2>Form</h2>
+<div class="mb-8">
+    <div>
+        breadcrumb
+    </div>
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-3xl font-bold tracking-tight">Edit Profile</h2>
+    </div>
     <ProfileForm data={data.form} />
 </div>

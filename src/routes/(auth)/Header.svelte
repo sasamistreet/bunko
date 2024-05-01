@@ -14,7 +14,7 @@
       User
     } from "lucide-svelte";
 </script>
-<nav class="bg-white border-b">
+<nav class="bg-white border-b fixed w-full z-100">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-12 items-center justify-between">
         

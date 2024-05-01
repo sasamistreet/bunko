@@ -2,6 +2,13 @@
     import * as Tabs from "$lib/components/ui/tabs";
     import { ThumbsUp, Heart } from "lucide-svelte";
 </script>
+<div>
+    breadcrumb
+</div>
+<div class="flex items-center justify-between mb-4">
+    <h2 class="text-3xl font-bold tracking-tight">Posts</h2>
+</div>
+<div>
 <Tabs.Root value="photo" class="w-full">
     <Tabs.List>
       <Tabs.Trigger value="photo">Photo</Tabs.Trigger>
@@ -26,3 +33,4 @@
     </Tabs.Content>
     <Tabs.Content value="comment">Change your password here.</Tabs.Content>
 </Tabs.Root>
+</div>
