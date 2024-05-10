@@ -3,9 +3,6 @@ import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
 
-export const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: '2023-10-16'
-});
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));

@@ -1,5 +1,7 @@
 import Stripe from 'stripe'
 import { SECRET_STRIPE_KEY } from '$env/static/private'
+import { json } from '@sveltejs/kit';
+//import type { RequestHandler } from './$types';
 
 // initialize Stripe
 const stripe = new Stripe(SECRET_STRIPE_KEY)
@@ -18,11 +20,7 @@ export async function POST() {
       enabled: true
     }
   })
-
-  // return the clientSecret to the client
-  return {
-    body: {
-      clientSecret: paymentIntent.client_secret
-    }
-  }
+  return json({
+      clientSecret: paymentIntent.client_secret,
+  });
 }
