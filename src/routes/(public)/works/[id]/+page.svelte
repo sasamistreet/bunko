@@ -1,21 +1,17 @@
 <script>
     import { AspectRatio } from "$lib/components/ui/aspect-ratio";
-    import Skeleton from "$lib/components/ui/skeleton/skeleton.svelte";
     import { badgeVariants } from "$lib/components/ui/badge";
-    import { Button } from "$lib/components/ui/button";
-    import { Badge } from "$lib/components/ui/badge";
+
     import * as Tabs from "$lib/components/ui/tabs";
-    import * as Accordion from "$lib/components/ui/accordion";
-    import { Heart, ThumbsUp, Bookmark, ShoppingCart } from "lucide-svelte";
+    import { Heart, ThumbsUp} from "lucide-svelte";
+    import PriceBox from "./PriceBox.svelte"
+	import { page } from "$app/stores";
+	
+
+
 </script>
 <div class="flex bg-slate-700 items-center">
-        <div class="pricebox w-[320px] bg-muted p-2 mx-auto my-8 text-center">
-            <p class="font-bold mb-4">Diagrams (Viewer)</p>
-            <p><Badge variant="outline" class="mr-2">50% OFF</Badge></p>
-            <p class="mb-4 text-red-500 text-xl"><span class="line-through text-slate-400 text-sm mr-2">¥2,000</span>¥1,000</p>
-            <Button class="block w-full"><ShoppingCart class="inline mr-2" size={18}/>Add to Cart</Button>
-            <Button variant="ghost" class="block w-full"><Bookmark class="inline mr-2" size={18}></Bookmark>Add to Wishlist</Button>
-        </div>
+    <PriceBox addToCart={() => {}} addToWishlist={() => {}}/>
 </div>
 <div class="md:w-[640px] mx-auto my-4 flex justify-between">
     <div>

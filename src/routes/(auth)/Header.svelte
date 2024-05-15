@@ -2,7 +2,6 @@
     import * as Avatar from "$lib/components/ui/avatar";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     import { Button } from "$lib/components/ui/button";
-    import { Switch } from "$lib/components/ui/switch";
     import { Toggle } from "$lib/components/ui/toggle";
     import {
       Bell,
@@ -13,6 +12,7 @@
       Settings,
       User
     } from "lucide-svelte";
+
 </script>
 <nav class="bg-white border-b fixed w-full z-100">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -101,6 +101,7 @@
                       <span><a href="/logout">Log out</a></span>
                       <DropdownMenu.Shortcut>⇧⌘Q</DropdownMenu.Shortcut>
                     </DropdownMenu.Item>
+                    <slot />
                   </DropdownMenu.Content>
                 </DropdownMenu.Root>
               
