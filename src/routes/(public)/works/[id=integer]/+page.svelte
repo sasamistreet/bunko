@@ -7,11 +7,33 @@
     import PriceBox from "./PriceBox.svelte"
 	import { page } from "$app/stores";
 	
+    let data = $page.data
+    let user = data.user
+    let isCart = $state(false)
+    let isWishlist = $state(false)
+    let isLoading = $state(false)
 
+    async function addWishlist(){
+        
+        const response = await fetch('../../api/whishlist',{
+                method: 'POST',
+                body: JSON.stringify({ user }),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+            }
+        ).then((res) => res.json());
+        
+        console.log(isWishlist)
+	}
+    
+    
 
 </script>
 <div class="flex bg-slate-700 items-center">
-    <PriceBox addToCart={() => {}} addToWishlist={() => {}}/>
+    {#if user}
+    <PriceBox workId={$page.params.id} addToCart={() => {isCart = true}} addToWishlist={addWishlist}/>
+    {/if}
 </div>
 <div class="md:w-[640px] mx-auto my-4 flex justify-between">
     <div>
