@@ -6,8 +6,8 @@ import { zod } from "sveltekit-superforms/adapters";
 import { wishlistSchema, cartSchema } from "./schema"
 
 
-async function addToWishlist(workId:number){
-    await supabase.from('Wishlist').upsert({work_id:workId}).select()
+async function addToWishlist(userId:String, workId:unknown){
+    await supabase.from('Wishlist').upsert({user_id:userId, work_id:workId}).select()
 }
 
 async function getWishlist(workId:number){
@@ -30,16 +30,12 @@ export const load: PageServerLoad = (async ({ locals:{supabase, user }}) => {
 });
 
 export const actions = {
-    addWishlist:async(event)=>{
-        const form = await superValidate(event, zod(wishlistSchema));
-        if (!form.valid) {
-        return fail(400, {
-            form,
-        });
-        }
-        return {
-            form,
-        };
+    addWishlist:async({locals, request})=>{
+        if (locals.user) {
+			const data = await request.formData();
+			await addToWishlist(locals.user.id, data.get('workId'));
+		}
+        console.log("pressed")
     },
     addCart:async() => {
 

@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte';
+    import { enhance } from '$app/forms';
     import * as Form from "$lib/components/ui/form";
     import { Input } from "$lib/components/ui/input";
     import { Button } from "$lib/components/ui/button";
@@ -8,7 +9,7 @@
     import { wishlistSchema, cartSchema } from "./schema"
     
 
-    let { workId, addToCart, addToWishlist } = $props();
+    let { workId, addToCart } = $props();
     let wishlist = $state([]);
 
     onMount(() => {
@@ -16,7 +17,7 @@
 	});
 
     async function loadWishlist() {
-		wishlist = await fetch('/api/whishlist').then((res) => res.json());
+		wishlist = await fetch('/api/wishlist').then((res) => res.json());
 	}
 
 </script>
@@ -28,10 +29,9 @@
     <Button class="block w-full" onclick={addToCart}><ShoppingCart class="inline mr-2" size={18}/>Add to Cart</Button>
     
     {#if !wishlist.find((item) => item.id === workId)}
-    <form method="POST" use:enhance>
+    <form method="POST" use:enhance action="?/addWishlist">
         <input type="hidden" name="workId" value={workId} />
-        <Button variant="ghost" class="block w-full" onclick={addToWishlist}><Bookmark class="inline mr-2" size={18}></Bookmark>Add to Wishlist</Button>
+        <Button type="submit" variant="ghost" class="block w-full"><Bookmark class="inline mr-2" size={18}></Bookmark>Add to Wishlist</Button>
     </form>
     {/if}
-
 </div>
