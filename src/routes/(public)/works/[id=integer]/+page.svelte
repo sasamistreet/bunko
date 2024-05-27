@@ -8,16 +8,14 @@
 	import { page } from "$app/stores";
 	
     let data = $page.data
-    let user = data.user
-    let isCart = $state(false)
-    let isWishlist = $state(false)
-    let isLoading = $state(false)
-    
+    let session = data.session
+    let profile = data.profile
+
 
 </script>
 <div class="flex bg-slate-700 items-center">
-    {#if user}
-    <PriceBox workId={$page.params.id} addToCart={() => {isCart = true}}/>
+    {#if session}
+    <PriceBox workId={$page.params.id}/>
     {/if}
 </div>
 <div class="md:w-[640px] mx-auto my-4 flex justify-between">

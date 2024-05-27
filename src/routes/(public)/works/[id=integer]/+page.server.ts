@@ -6,38 +6,55 @@ import { zod } from "sveltekit-superforms/adapters";
 import { wishlistSchema, cartSchema } from "./schema"
 
 
-async function addToWishlist(userId:String, workId:unknown){
-    await supabase.from('Wishlist').upsert({user_id:userId, work_id:workId}).select()
-}
-
-async function getWishlist(workId:number){
-    await supabase.from('Wishlist').upsert({work_id:workId}).select
-}
-
-async function getFeatured(path:string){
-    const { data } = await supabase.storage.from('works').getPublicUrl(path);
+async function addToWishlist(userId:String, workId:unknown){ 
+    const { data, error } =await supabase.from('Wishlist').insert({user_id:userId, work_id:workId})
     return data;
 }
 
-export const load: PageServerLoad = (async ({ locals:{supabase, user }}) => {
+async function addToCart(userId:String, workId:unknown){ 
+    const { data, error } =await supabase.from('Cart').insert({user_id:userId, work_id:workId})
+    return data;
+}
+
+
+async function getProfile(id:string){
+    const { data } = await supabase.from('profile').select().eq("id", id);
+    return data;
+}
+
+export const load: PageServerLoad = async ({ locals:{ user }}) => {
     try {
-        const wishlist = await superValidate(zod(wishlistSchema));
-        const cart = await superValidate(zod(cartSchema))
-        return { user, wishlist, cart } ;
+        if (user) {
+            const profile = await getProfile(user.id);
+            return { profile }
+        }
+        
     } catch (error) {
 
-    }
-});
+    };
+};
 
 export const actions = {
-    addWishlist:async({locals, request})=>{
-        if (locals.user) {
-			const data = await request.formData();
-			await addToWishlist(locals.user.id, data.get('workId'));
-		}
-        console.log("pressed")
-    },
-    addCart:async() => {
+    wishlist:async({locals, request})=>{
+        try {
+            if (locals.user) {
+                const data = await request.formData();
+                await addToWishlist(locals.user.id, data.get('workId'));
 
+            }
+        } catch (error) {
+
+        }
+        
+    },
+    cart:async({locals, request}) => {
+        try {
+            if (locals.user) {
+                const data = await request.formData();
+                await addToCart(locals.user.id, data.get('workId'));
+            }
+        } catch (error) {
+
+        }
     }
 }
