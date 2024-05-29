@@ -5,8 +5,8 @@
     import { Input } from "$lib/components/ui/input";
     import { Button } from "$lib/components/ui/button";
     import { Badge } from "$lib/components/ui/badge";
-    import { Bookmark, ShoppingCart, Check } from "lucide-svelte";
-    import { wishlistSchema, cartSchema } from "./schema"
+    import { Bookmark, ShoppingCart, Loader2} from "lucide-svelte";
+    
 
     type Props = {
         workId: string;
@@ -45,13 +45,13 @@
             {#if !addingWishlist}
             <Bookmark class="inline mr-2" size={18}></Bookmark>Add to Wishlist
             {:else}
-            Adding...
+            <Loader2 class="animate-spin"/>Adding...
             {/if}
         </Button>
     </form>
     {:else}
-    <div class="my-2">
+    <Button href="/account/library/wishlist" variant="link" class="block w-full">
         <Bookmark class="inline mr-2" size={18} fill="#000"></Bookmark>In Wishlist
-    </div>
+    </Button>
     {/if}
 </div>
