@@ -9,20 +9,36 @@
     
 
     type Props = {
-        workId: string;
+        workId: Number;
     };
-    let { workId}:Props = $props();
+    let { workId }:Props = $props();
 
 
     let addingWishlist = $state(false);
     let isCart = $state([]);
-    let isWishlist = $state([]);
+    let isWishlist = $state(false);
 
+    type WorkInfo = {
+        title:String,
+        author:String
+    }
+    type WishItem = {
+        id:Number,
+        work_id:Number,
+        Work:WorkInfo
+    }
     onMount(() => {
 		loadWishlist();
 	});
     async function loadWishlist() {
-		isWishlist = await fetch(`/api/wishlist?work=${workId}`).then((res) => res.json());
+		const wishlist = await fetch(`/api/wishlist?work=${workId}`).then((res) => res.json());
+        console.log(wishlist)
+        const isInWishlist =  wishlist.find((item:WishItem) => item.work_id === workId);
+        if ( wishlist.count === 0){
+            isWishlist = true;
+        } else {
+            isWishlist = false;
+        }
 	}
 
 </script>

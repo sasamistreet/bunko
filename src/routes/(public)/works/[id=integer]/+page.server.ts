@@ -6,7 +6,7 @@ import { zod } from "sveltekit-superforms/adapters";
 import { wishlistSchema, cartSchema } from "./schema"
 
 
-async function addToWishlist(userId:String, workId:unknown){ 
+async function addToWishlist(userId:string|undefined, workId:unknown){ 
     const { data, error } =await supabase.from('Wishlist').insert({user_id:userId, work_id:workId})
     return data;
 }
@@ -35,15 +35,12 @@ export const load: PageServerLoad = async ({ locals:{ user }}) => {
 };
 
 export const actions = {
-    wishlist:async({locals, request})=>{
+    wishlist:async({locals:{ user }, request})=>{
+        const data = await request.formData();
         try {
-            if (locals.user) {
-                const data = await request.formData();
-                await addToWishlist(locals.user.id, data.get('workId'));
-
-            }
+            await addToWishlist(user?.id, data.get('workId'));
         } catch (error) {
-
+            return error;
         }
         
     },
