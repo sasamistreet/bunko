@@ -13,7 +13,6 @@
     };
     let { workId }:Props = $props();
 
-
     let addingWishlist = $state(false);
     let isCart = $state([]);
     let isWishlist = $state(false);
@@ -32,9 +31,8 @@
 	});
     async function loadWishlist() {
 		const wishlist = await fetch(`/api/wishlist?work=${workId}`).then((res) => res.json());
-        console.log(wishlist)
-        const isInWishlist =  wishlist.find((item:WishItem) => item.work_id === workId);
-        if ( wishlist.count === 0){
+        console.log(wishlist);
+        if ( Object.keys(wishlist).length !== 0){
             isWishlist = true;
         } else {
             isWishlist = false;
@@ -61,7 +59,7 @@
             {#if !addingWishlist}
             <Bookmark class="inline mr-2" size={18}></Bookmark>Add to Wishlist
             {:else}
-            <Loader2 class="animate-spin"/>Adding...
+            <Loader2 class="inline mr-2 animate-spin"/>Adding...
             {/if}
         </Button>
     </form>
