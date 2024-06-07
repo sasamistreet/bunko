@@ -31,8 +31,7 @@
 	});
     async function loadWishlist() {
 		const wishlist = await fetch(`/api/wishlist?work=${workId}`).then((res) => res.json());
-        console.log(wishlist);
-        if ( Object.keys(wishlist).length !== 0){
+        if ( Object.keys(wishlist.data).length !== 0){
             isWishlist = true;
         } else {
             isWishlist = false;
@@ -49,8 +48,12 @@
     {#if !isWishlist}
     <form method="POST" action="?/wishlist" use:enhance={() => {
         addingWishlist = true;
-        return async ({update}) => {
-            await update();
+        return async ({ result, update }) => {
+            //await update();
+            if (result.type == "success"){
+                console.log(result);
+                isWishlist = true;
+            }
             addingWishlist = false;
         }
     }}>

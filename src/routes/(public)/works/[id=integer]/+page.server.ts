@@ -32,14 +32,12 @@ export const load: PageServerLoad = async ({params, depends, locals:{ supabase }
 };
 
 export const actions = {
-    
     wishlist:async({locals:{ user, supabase }, request})=>{
-
-        const data = await request.formData();
+        const formdata = await request.formData();
         try {
             //await addToWishlist(user?.id, data.get('workId'));
-            const { error } = await supabase.from('Wishlist').insert({user_id:user?.id, work_id:data.get('workId')});
-            throw error;
+            const { data } = await supabase.from('Wishlist').insert({user_id:user?.id, work_id:formdata.get('workId')});
+            return data;
         } catch (error) {
             console.log( error );
         }

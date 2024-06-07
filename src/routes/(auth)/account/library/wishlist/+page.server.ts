@@ -1,9 +1,11 @@
 import type { PageServerLoad } from "./$types";
 import { supabase } from "$lib/server/supabaseClient";
+import { json } from "@sveltejs/kit";
 
 async function getWishlist(userId:string|undefined) {
     try {
         const { data } = await supabase.from("Wishlist").select(`*, Work(title)`).eq("user_id", userId);
+        console.log(data);
         return data
         
     } catch(error) {
@@ -11,9 +13,11 @@ async function getWishlist(userId:string|undefined) {
     }
 }
 
-export const load: PageServerLoad = async({ locals:{ user } }) => {
+export const load: PageServerLoad = async({ locals:{ user, supabase} }) => {
     try {
-        const items = await getWishlist(user?.id)
+        //const items = await getWishlist(user?.id)
+        const { data } = await supabase.from("Wishlist").select(`*, Work(title)`).eq("user_id", user?.id);
+        const items = data;
         return { items };
     } catch(error) {
         console.log(error);
@@ -25,9 +29,7 @@ export const actions = {
         try {
             const data = await request.formData();
             const { error } = await supabase.from("Wishlist").delete().match({"user_id": user?.id, "work_id": data.get('work_id')})
-            if (error){
-                console.log(error);
-            }
+            throw error;
         } catch( error ) {
             return error
         }
