@@ -26,13 +26,9 @@ export const load: PageServerLoad = async({ locals:{ user, supabase} }) => {
 
 export const actions = {
     delete: async({ locals:{ supabase, user }, request }) => {
-        try {
+            //await new Promise((fulfil) => setTimeout(fulfil, 1000));
             const data = await request.formData();
-            const { error } = await supabase.from("Wishlist").delete().match({"user_id": user?.id, "work_id": data.get('work_id')})
-            throw error;
-        } catch( error ) {
-            return error
-        }
+            await supabase.from("Wishlist").delete().match({"user_id": user?.id, "work_id": data.get('work_id')})
     },
     cart: async() => {
 

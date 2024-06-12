@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as Select from "$lib/components/ui/select";
+    import WishlistItem from "./WishlistItem.svelte";
     import { Button } from "$lib/components/ui/button"
     import { Trash2 } from "lucide-svelte";
     import { page } from "$app/stores";
@@ -18,9 +19,11 @@
         work_id:Number,
         Work:WorkInfo
     }
-    let items:WishItem[] = $state($page.data.items);
-    let deleting:Number[] = $state([])
+    //let items:WishItem[] = $state($page.data.items);
+    let deleting:Number[] = $state([]);
+
 </script>
+
 {#snippet wishlistItem(work)}
     <div class="flex border-t items-center gap-2" out:fade>
         <div>
@@ -29,6 +32,7 @@
                 return async ({ update }) => {
                     await update();
                     deleting = deleting.filter((id) => id !== work.work_id);
+
                 };
             }}>
                 <input type="hidden" name="work_id" value={work.work_id}/>
@@ -67,8 +71,10 @@
 </div>
 
 <div class="w-[640px] mx-auto">
-    {#each items.filter((item) => !deleting.includes(item.work_id)) as item(item.work_id)}
-        {@render wishlistItem(item)}
+    {#each $page.data.items.filter((item:WishItem) => !deleting.includes(item.work_id)) as item(item.work_id)}
+    <div out:fade> 
+        <WishlistItem work={item}/>
+    </div>
     {/each}
 </div>
 </div>
