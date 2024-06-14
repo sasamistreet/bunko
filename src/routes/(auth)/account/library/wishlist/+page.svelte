@@ -1,6 +1,5 @@
 <script lang="ts">
     import * as Select from "$lib/components/ui/select";
-    import WishlistItem from "./WishlistItem.svelte";
     import { Button } from "$lib/components/ui/button"
     import { Trash2 } from "lucide-svelte";
     import { page } from "$app/stores";
@@ -48,7 +47,10 @@
         </div>
         <div>{work.price}</div>
         <div>
-            <Button size="sm">Cart</Button>
+            <form method="POST" action="?/cart" use:enhance={()=>{
+            }} >
+                <Button type="submit"  size="sm">Cart</Button>
+            </form>
         </div>
     </div>
 {/snippet}
@@ -72,9 +74,7 @@
 
 <div class="w-[640px] mx-auto">
     {#each $page.data.items.filter((item:WishItem) => !deleting.includes(item.work_id)) as item(item.work_id)}
-    <div out:fade> 
-        <WishlistItem work={item}/>
-    </div>
+        {@render wishlistItem(item)}
     {/each}
 </div>
 </div>

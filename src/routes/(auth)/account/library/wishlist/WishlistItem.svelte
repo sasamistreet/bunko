@@ -3,6 +3,8 @@
     import { fade } from 'svelte/transition';
     import { Button } from "$lib/components/ui/button"
     import { Trash2 } from "lucide-svelte";
+    import { deletingArray } from "./stores.svelte.js";
+
 
     let { work }: Props = $props();
     type WorkInfo = {
@@ -23,12 +25,10 @@
 <div class="flex border-t items-center gap-2">
     <div>
         <form method="POST" action="?/delete" use:enhance={()=>{
-            deleting = [...deleting, work.work_id];
+            deletingArray(work.work_id).add;
             return async ({ update }) => {
-                console.log(deleting);
                 await update();
-                deleting = deleting.filter((id) => id !== work.work_id);
-                console.log(deleting);
+                deletingArray.deleting= deleting.filter((id) => id !== work.work_id);
             };
         }}>
             <input type="hidden" name="work_id" value={work.work_id}/>

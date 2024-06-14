@@ -1,1 +1,0 @@
-let deleting:Number[] = $state([]);

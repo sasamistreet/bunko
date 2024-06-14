@@ -13,8 +13,9 @@
     };
     let { workId }:Props = $props();
 
+    let addingcart = $state(false);
     let addingWishlist = $state(false);
-    let isCart = $state([]);
+    let isCart = $state(false);
     let isWishlist = $state(false);
 
     type WorkInfo = {
@@ -27,6 +28,7 @@
         Work:WorkInfo
     }
     onMount(() => {
+        loadCart();
 		loadWishlist();
 	});
     async function loadWishlist() {
@@ -35,6 +37,14 @@
             isWishlist = true;
         } else {
             isWishlist = false;
+        }
+	}
+    async function loadCart() {
+		const cart = await fetch(`/api/cart/${workId}`).then((res) => res.json());
+        if ( Object.keys(cart.data).length !== 0){
+            isCart = true;
+        } else {
+            isCart = false;
         }
 	}
 
