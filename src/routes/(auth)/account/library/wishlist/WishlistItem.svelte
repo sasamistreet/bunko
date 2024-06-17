@@ -1,10 +1,9 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
-    import { fade } from 'svelte/transition';
+    import { onMount } from "svelte"
     import { Button } from "$lib/components/ui/button"
     import { Trash2 } from "lucide-svelte";
-    import { deletingArray } from "./stores.svelte.js";
-
+    import { deleting } from "./stores.svelte";
 
     let { work }: Props = $props();
     type WorkInfo = {
@@ -19,19 +18,34 @@
     }
     type Props = {
        work: WishItem;
-       deleting: Number[];
     };
+
+    let addingCart = $state(false);
+    let isCart = $state(false);
+
+    onMount(() => {
+        checkCart();
+    });
+
+    async function checkCart() {
+		const cart = await fetch(`/api/cart/${work.work_id}`).then((res) => res.json());
+        if ( Object.keys(cart.data).length !== 0){
+            isCart = true;
+        } else {
+            isCart = false;
+        }
+	}
 </script>
 <div class="flex border-t items-center gap-2">
     <div>
         <form method="POST" action="?/delete" use:enhance={()=>{
-            deletingArray(work.work_id).add;
+            deleting.push(work.id)
             return async ({ update }) => {
                 await update();
-                deletingArray.deleting= deleting.filter((id) => id !== work.work_id);
+                deleting.filter((id) => id !== work.id);
             };
         }}>
-            <input type="hidden" name="work_id" value={work.work_id}/>
+            <input type="hidden" name="id" value={work.id}/>
             <Button type="submit" size="icon" variant="ghost"><Trash2 strokeWidth={1}/></Button>
         </form>
     </div>
@@ -44,6 +58,10 @@
     </div>
     <div>{work.Work.price}</div>
     <div>
+        {#if isCart}
+        In Cart
+        {:else}
         <Button size="sm">Cart</Button>
+        {/if}
     </div>
 </div>

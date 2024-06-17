@@ -29,7 +29,7 @@ export const actions = {
             const { data } = await supabase.from('Cart').insert({user_id:user?.id, work_id:formdata.get('workId')});
             return data;
         } catch (error) {
-
+            console.log( error );
         }
     }
 }

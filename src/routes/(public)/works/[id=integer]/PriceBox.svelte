@@ -1,11 +1,9 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { enhance } from '$app/forms';
-    import * as Form from "$lib/components/ui/form";
-    import { Input } from "$lib/components/ui/input";
     import { Button } from "$lib/components/ui/button";
     import { Badge } from "$lib/components/ui/badge";
-    import { Bookmark, ShoppingCart, Loader2} from "lucide-svelte";
+    import { Bookmark, BookmarkCheck, Check, ShoppingCart, Loader2} from "lucide-svelte";
     
 
     type Props = {
@@ -13,7 +11,7 @@
     };
     let { workId }:Props = $props();
 
-    let addingcart = $state(false);
+    let addingCart = $state(false);
     let addingWishlist = $state(false);
     let isCart = $state(false);
     let isWishlist = $state(false);
@@ -53,7 +51,28 @@
     <p class="font-bold mb-4">Diagrams (Viewer)</p>
     <p><Badge variant="outline" class="mr-2">50% OFF</Badge></p>
     <p class="mb-4 text-red-500 text-xl"><span class="line-through text-slate-400 text-sm mr-2">¥2,000</span>¥1,000</p>
-    <Button class="block w-full"><ShoppingCart class="inline mr-2" size={18}/>Add to Cart</Button>
+    {#if !isCart}
+        <form method="POST" action="?/cart" use:enhance={() => {
+            addingCart = true;
+            return async ({ result }) => {
+                if (result.type == "success"){
+                    isCart = true;
+                }
+                addingCart = false;
+            }
+        }}>
+        <input type="hidden" name="workId" value={workId} />
+        {#if !addingCart}
+            <Button type="submit" class="block w-full"><ShoppingCart class="inline mr-2" size={18}/>Add to Cart</Button>
+        {:else}
+            <Button disabled class="w-full"><Loader2 class="inline mr-2 animate-spin"/>Adding...</Button>
+        {/if}
+        </form>
+    {:else}
+    <Button href="/account/library/cart" variant="outline" class="block w-full">
+        <Check class="inline mr-2" size={18}></Check>In Cart
+    </Button>
+    {/if}
     
     {#if !isWishlist}
     <form method="POST" action="?/wishlist" use:enhance={() => {
@@ -61,7 +80,6 @@
         return async ({ result, update }) => {
             //await update();
             if (result.type == "success"){
-                console.log(result);
                 isWishlist = true;
             }
             addingWishlist = false;
@@ -78,7 +96,7 @@
     </form>
     {:else}
     <Button href="/account/library/wishlist" variant="link" class="block w-full">
-        <Bookmark class="inline mr-2" size={18} fill="#000"></Bookmark>In Wishlist
+        <BookmarkCheck class="inline mr-2" size={18}></BookmarkCheck>In Wishlist
     </Button>
     {/if}
 </div>
