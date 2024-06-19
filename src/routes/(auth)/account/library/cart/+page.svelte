@@ -3,6 +3,7 @@
     import { fade } from 'svelte/transition';
     import { enhance } from "$app/forms";
     import { Button } from "$lib/components/ui/button"
+    import * as Card from "$lib/components/ui/card";
     import { Trash2 } from "lucide-svelte";
 
     type WorkInfo = {
@@ -37,15 +38,30 @@
             <p class="mt-2">{work.Work.title}</p>
             <p class="text-xs">{work.Work.author}</p>
         </div>
-        <div>{work.price}</div>
+        <div>{work.Work.price}</div>
     </div>
 {/snippet}
-
-<div class="container">
-    <div class="w-[640px] mx-auto">
-        <h1 class="text-2xl font-bold">Cart</h1>
+<h1 class="text-2xl font-bold">Cart</h1>
+<div class="container flex gap-8">
+    <div class="glow">
         {#each $page.data.items.filter((item:WishItem) => !deleting.includes(item.id)) as item(item.id)}
             {@render cartItem(item)} 
         {/each}
+        <hr />
+        <div class="text-right py-4">Total ￥{$page.data.sum}</div>
+    </div>
+    <div class="w-64 flex-none">
+        <Card.Root>
+            <Card.Header>
+              <Card.Title>Card Title</Card.Title>
+              <Card.Description>Card Description</Card.Description>
+            </Card.Header>
+            <Card.Content>
+                <div>Total ￥1,000</div>
+                <div>Tax ￥10</div>
+                <hr />
+              <Button>Checkout</Button>
+            </Card.Content>
+          </Card.Root>
     </div>
 </div>
