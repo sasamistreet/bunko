@@ -10,21 +10,12 @@ type CartItem = {
     Work:WorkInfo
 }
 
-function calculateSum(items:CartItem[]|null){
-    let sum:number = 0;
-    if (items){
-        for (const item of items ){
-            sum = sum + item.Work.price;
-        }
-    }
-    return sum;
-}
+let items:CartItem[]
+let sum:number;
 
 export const load:PageServerLoad = async({ locals:{ user, supabase} }) => {
     try{
         const { data } = await supabase.from("Cart").select(`*, Work(title,price)`).eq("user_id", user?.id);
-        let items:CartItem[]
-        let sum:number;
         if (data){
             items = data;
             sum = items ? items.reduce((acc, item) => acc + item.Work.price, 0) : 0;
@@ -40,3 +31,24 @@ export const load:PageServerLoad = async({ locals:{ user, supabase} }) => {
         };
     }
 };
+
+export const actions = {
+    checkout:async({ locals:{ supabase }, request }) => {
+        const data = await request.formData();
+        //Paymentテーブルにアイテムを追加（金額のみ？）　ステータスはProgress
+        //Checkoutページに移行、決済方法を指定
+        //決済処理
+        //成功がリターンしたら
+        //PaymentテーブルのアイテムのステータスをPaidに変更
+        //カートのアイテムをライブラリに移し
+        //ウィッシュリストとカートのテーブルからアイテムを削除
+        //Paidページへジャンプ　ライブラリor作品ページへのリンク
+    },
+    delete:async({ locals:{ supabase }, request }) => {
+        const data = await request.formData();
+        await supabase.from("Cart").delete().eq("id", data.get('id'))
+        //削除に成功したら配列からアイテムを削除
+        //sumを再計算
+        //リロード？
+    }
+}

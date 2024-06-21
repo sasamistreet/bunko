@@ -12,7 +12,7 @@ export const load: PageServerLoad = async({ locals:{ user, supabase} }) => {
 };
 
 export const actions = {
-    delete: async({ locals:{ supabase, }, request }) => {
+    delete: async({ locals:{ supabase }, request }) => {
         const data = await request.formData();
         await supabase.from("Wishlist").delete().eq("id", data.get('id'))
     },

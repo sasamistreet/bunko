@@ -38,30 +38,33 @@
             <p class="mt-2">{work.Work.title}</p>
             <p class="text-xs">{work.Work.author}</p>
         </div>
-        <div>{work.Work.price}</div>
+        <div>￥{work.Work.price}</div>
     </div>
 {/snippet}
 <h1 class="text-2xl font-bold">Cart</h1>
 <div class="container flex gap-8">
-    <div class="glow">
+    <div class="grow">
         {#each $page.data.items.filter((item:WishItem) => !deleting.includes(item.id)) as item(item.id)}
             {@render cartItem(item)} 
         {/each}
         <hr />
         <div class="text-right py-4">Total ￥{$page.data.sum}</div>
     </div>
-    <div class="w-64 flex-none">
-        <Card.Root>
+    <div class="w-96 flex-none">
+        <Card.Root class="bg-zinc-100">
             <Card.Header>
-              <Card.Title>Card Title</Card.Title>
-              <Card.Description>Card Description</Card.Description>
+              <Card.Title>Order Summery</Card.Title>
             </Card.Header>
-            <Card.Content>
-                <div>Total ￥1,000</div>
-                <div>Tax ￥10</div>
-                <hr />
-              <Button>Checkout</Button>
+            <Card.Content class="text-right">
+                <dl class="lk abx">
+                    <div class="flex justify-between border-b py-4 text-sm"><dt class="text-zinc-400">Subtotal</dt><dd class="awa awe axv">￥1,000</dd></div>
+                    <div class="flex justify-between border-b py-4 text-sm"><dt class="text-zinc-400">Tax</dt><dd class="">￥10</dd></div>
+                </dl>
+                <div class="flex justify-between py-4 text-lg"><dt class="">Total</dt><dd class="">￥1,010</dd></div> 
             </Card.Content>
+            <Card.Footer>
+                <Button class="w-full">Checkout</Button>
+            </Card.Footer>
           </Card.Root>
     </div>
 </div>
