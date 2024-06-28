@@ -1,4 +1,3 @@
-import { supabase } from "$lib/server/supabaseClient";
 import type { PageServerLoad } from './$types';
 
 

@@ -14,13 +14,11 @@ import type { PageServerLoad } from './$types'
 	}
 }*/
 
-export const load: PageServerLoad = async ({ url, locals: { getUser } }) => {
-  const session = await getUser()
+export const load: PageServerLoad = async ({ url, locals: { user } }) => {
 
   // if the user is already logged in return them to the account page
-  if (session) {
+  if (user) {
     redirect(302, `${url.origin}/dashboard`);
-    console.log("inneda")
   }
 
   return { url: url.origin }

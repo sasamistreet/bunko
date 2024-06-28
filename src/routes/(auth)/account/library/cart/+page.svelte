@@ -2,6 +2,7 @@
     import { page } from "$app/stores";
     import { fade } from 'svelte/transition';
     import { enhance } from "$app/forms";
+    import { invalidateAll } from '$app/navigation';
     import { Button } from "$lib/components/ui/button"
     import * as Card from "$lib/components/ui/card";
     import { Trash2 } from "lucide-svelte";
@@ -25,6 +26,7 @@
                 return async ({ update }) => {
                     await update();
                     deleting = deleting.filter((id) => id !== work.work_id);
+                    invalidateAll();
                 };
             }}>
                 <input type="hidden" name="work_id" value={work.work_id}/>
@@ -56,14 +58,18 @@
               <Card.Title>Order Summery</Card.Title>
             </Card.Header>
             <Card.Content class="text-right">
-                <dl class="lk abx">
-                    <div class="flex justify-between border-b py-4 text-sm"><dt class="text-zinc-400">Subtotal</dt><dd class="awa awe axv">￥1,000</dd></div>
-                    <div class="flex justify-between border-b py-4 text-sm"><dt class="text-zinc-400">Tax</dt><dd class="">￥10</dd></div>
-                </dl>
-                <div class="flex justify-between py-4 text-lg"><dt class="">Total</dt><dd class="">￥1,010</dd></div> 
+                <form>
+                    <dl class="lk abx">
+                        <div class="flex justify-between border-b py-4 text-sm"><dt class="text-zinc-400">Subtotal</dt><dd class="awa awe axv">￥{$page.data.sum}</dd></div>
+                        <div class="flex justify-between border-b py-4 text-sm"><dt class="text-zinc-400">Tax</dt><dd class="">￥{$page.data.tax}</dd></div>
+                    </dl>
+                    <div class="flex justify-between py-4 text-lg"><dt class="">Total</dt><dd class="">￥{$page.data.total}</dd></div>
+                    <input type="hidden" name="price" value={$page.data.sum}>
+                    <Button class="w-full">Checkout</Button>
+                </form>
             </Card.Content>
             <Card.Footer>
-                <Button class="w-full">Checkout</Button>
+                
             </Card.Footer>
           </Card.Root>
     </div>

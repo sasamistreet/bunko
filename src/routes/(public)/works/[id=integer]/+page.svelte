@@ -9,13 +9,12 @@
 	
     let data = $page.data
     let session = data.session
-    let profile = data.profile
-
+    let workId = Number($page.params.id)
 
 </script>
 <div class="flex bg-slate-700 items-center">
     {#if session}
-    <PriceBox workId={$page.params.id}/>
+    <PriceBox workId={workId}/>
     {/if}
 </div>
 <div class="md:w-[640px] mx-auto my-4 flex justify-between">
