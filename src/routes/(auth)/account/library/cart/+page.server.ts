@@ -37,6 +37,7 @@ export const actions = {
     checkout:async({ url, locals:{ supabase, user }, request }) => {
         const formData = await request.formData();
         //Paymentテーブルにアイテムを追加（金額のみ？）　ステータスはProgress
+        //前回の中止データが存在したら？最新のデータのみ参照
         const { error } = await supabase.from('payment').insert({user_id:user?.id, price:formData.get('price'), state:"processing"});
         if (error) {
             console.log(error);
@@ -53,6 +54,9 @@ export const actions = {
     },
     delete:async({ locals:{ supabase }, request }) => {
         const data = await request.formData();
-        await supabase.from("Cart").delete().eq("id", data.get('id'))
+        const { error } = await supabase.from("cart").delete().eq("id", data.get('id'))
+        if(error){
+            console.log(error)
+        }
     }
 }

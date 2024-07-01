@@ -2,7 +2,7 @@
     import { enhance } from "$app/forms";
     import { onMount } from "svelte"
     import { Button } from "$lib/components/ui/button"
-    import { Trash2 } from "lucide-svelte";
+    import { Trash2, Loader2 } from "lucide-svelte";
     import { deleting } from "./stores.svelte";
 
     let { work }: Props = $props();
@@ -59,9 +59,26 @@
     <div>{work.Work.price}</div>
     <div>
         {#if isCart}
-        In Cart
+            <Button href="/account/library/cart" variant="outline" class="block w-full">
+                In Cart
+            </Button>
         {:else}
-        <Button size="sm">Cart</Button>
+            <form method="POST" action="?/cart" use:enhance={() => {
+                addingCart = true;
+                return async ({ result }) => {
+                    if (result.type == "success"){
+                        isCart = true;
+                    }
+                    addingCart = false;
+                }
+            }}>
+                <input type="hidden" name="workId" value={work.work_id} />
+                {#if !addingCart}
+                    <Button type="submit" class="block w-full">Add to Cart</Button>
+                {:else}
+                    <Button disabled class="w-full"><Loader2 class="inline mr-2 animate-spin"/>Adding...</Button>
+                {/if}
+            </form>
         {/if}
     </div>
 </div>

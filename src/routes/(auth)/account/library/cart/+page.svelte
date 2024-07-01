@@ -17,6 +17,7 @@
         Work:WorkInfo
     }
     let deleting:Number[] = $state([]);
+    const items = $page.data.items
 </script>
 {#snippet cartItem(work)}
     <div class="flex border-t items-center gap-2" out:fade>
@@ -26,10 +27,11 @@
                 return async ({ update }) => {
                     await update();
                     deleting = deleting.filter((id) => id !== work.work_id);
+                    //カートのアイテムを削除したらload関数を再実行して価格を再計算
                     invalidateAll();
                 };
             }}>
-                <input type="hidden" name="work_id" value={work.work_id}/>
+                <input type="hidden" name="id" value={work.id}/>
                 <Button type="submit" size="icon" variant="ghost"><Trash2 strokeWidth={1}/></Button>
             </form>
         </div>
@@ -46,11 +48,15 @@
 <h1 class="text-2xl font-bold">Cart</h1>
 <div class="container flex gap-8">
     <div class="grow">
-        {#each $page.data.items.filter((item:WishItem) => !deleting.includes(item.id)) as item(item.id)}
-            {@render cartItem(item)} 
-        {/each}
-        <hr />
-        <div class="text-right py-4">Total ￥{$page.data.sum}</div>
+        {#if $page.data.items.length == 0}
+            <p>There is no items in cart.</p>
+        {:else}
+            {#each $page.data.items.filter((item:WishItem) => !deleting.includes(item.id)) as item(item.id)}
+                {@render cartItem(item)} 
+            {/each}
+            <hr />
+            <div class="text-right py-4">Total ￥{$page.data.sum}</div>
+        {/if}
     </div>
     <div class="w-96 flex-none">
         <Card.Root class="bg-zinc-100">
@@ -65,7 +71,11 @@
                     </dl>
                     <div class="flex justify-between py-4 text-lg"><dt class="">Total</dt><dd class="">￥{$page.data.total}</dd></div>
                     <input type="hidden" name="price" value={$page.data.sum}>
+                    {#if $page.data.items.length == 0}
+                        <p>There is no items in cart.</p>
+                    {:else}
                     <Button class="w-full">Checkout</Button>
+                    {/if}
                 </form>
             </Card.Content>
             <Card.Footer>

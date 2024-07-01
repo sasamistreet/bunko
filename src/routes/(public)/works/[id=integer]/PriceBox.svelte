@@ -39,10 +39,11 @@
 	}
     async function loadCart() {
 		const cart = await fetch(`/api/cart/${workId}`).then((res) => res.json());
-        if ( Object.keys(cart.data).length !== 0){
-            isCart = true;
-        } else {
+        if ( Object.keys(cart.data).length == 0){
             isCart = false;
+            console.log(cart.data);
+        } else {
+            isCart = true;
         }
 	}
 
