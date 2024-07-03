@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 
 
+
 export const load: PageServerLoad = async () => {
     try {
         /*depends('supabase:db:Work');
@@ -24,7 +25,7 @@ export const actions = {
     cart:async({locals:{user, supabase}, request}) => {
         const formdata = await request.formData();
         try {
-            const { data } = await supabase.from('Cart').insert({user_id:user?.id, work_id:formdata.get('workId')});
+            const { data } = await supabase.from('cart').insert({user_id:user?.id, work_id:formdata.get('workId')});
             return data;
         } catch (error) {
             console.log( error );

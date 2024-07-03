@@ -33,6 +33,7 @@
 		const wishlist = await fetch(`/api/wishlist?work=${workId}`).then((res) => res.json());
         if ( Object.keys(wishlist.data).length !== 0){
             isWishlist = true;
+            
         } else {
             isWishlist = false;
         }

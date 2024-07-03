@@ -7,17 +7,8 @@
     import * as Card from "$lib/components/ui/card";
     import { Trash2 } from "lucide-svelte";
 
-    type WorkInfo = {
-        title:String,
-        author:String
-    }
-    type WishItem = {
-        id:Number,
-        work_id:Number,
-        Work:WorkInfo
-    }
     let deleting:Number[] = $state([]);
-    const items = $page.data.items
+    //const items = $page.data.items
 </script>
 {#snippet cartItem(work)}
     <div class="flex border-t items-center gap-2" out:fade>
@@ -51,7 +42,7 @@
         {#if $page.data.items.length == 0}
             <p>There is no items in cart.</p>
         {:else}
-            {#each $page.data.items.filter((item:WishItem) => !deleting.includes(item.id)) as item(item.id)}
+            {#each $page.data.items.filter((item:CartItem) => !deleting.includes(item.id)) as item(item.id)}
                 {@render cartItem(item)} 
             {/each}
             <hr />

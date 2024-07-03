@@ -17,6 +17,7 @@ declare global {
 			session: Session | null
 			user: User | null
 		}*/
+
 	}
 }
 

@@ -1,15 +1,7 @@
 import type { PageServerLoad } from "./$types";
 import { redirect } from '@sveltejs/kit'
 
-type WorkInfo = {
-    title:string,
-    price:number
-}
-type CartItem = {
-    id:number,
-    work_id:number,
-    Work:WorkInfo
-}
+
 
 let sum:number;
 let taxRate:number = 0.01;
