@@ -55,7 +55,7 @@
               <Card.Title>Order Summery</Card.Title>
             </Card.Header>
             <Card.Content class="text-right">
-                <form>
+                <form method="POST" action="?/checkout">
                     <dl class="lk abx">
                         <div class="flex justify-between border-b py-4 text-sm"><dt class="text-zinc-400">Subtotal</dt><dd class="awa awe axv">￥{$page.data.sum}</dd></div>
                         <div class="flex justify-between border-b py-4 text-sm"><dt class="text-zinc-400">Tax</dt><dd class="">￥{$page.data.tax}</dd></div>
@@ -65,7 +65,7 @@
                     {#if $page.data.items.length == 0}
                         <p>There is no items in cart.</p>
                     {:else}
-                    <Button class="w-full">Checkout</Button>
+                    <Button type="submit" class="w-full">Checkout</Button>
                     {/if}
                 </form>
             </Card.Content>

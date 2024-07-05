@@ -8,14 +8,14 @@
         { value: "date", label: "Date" },
         { value: "name", label: "Name" },
     ];
-    type WorkInfo = {
-        title:String,
-        author:String
-    }
+
     type WishItem = {
-        id:Number,
-        work_id:Number,
-        Work:WorkInfo
+        id:number,
+        work_id:number,
+        Work:{
+            title:string,
+            author:string
+        }
     }
 
 </script>
