@@ -1,5 +1,7 @@
 import { redirect } from "@sveltejs/kit";
+import { json } from '@sveltejs/kit';
 import type { PageServerLoad } from "./$types";
+
 
 interface paymentItem  {
     id:number,
@@ -10,7 +12,6 @@ interface paymentItem  {
 }
 
 let items:CartItem[] = [];
-
 
 
 export const load:PageServerLoad = async({locals:{supabase, user}}) => {
@@ -27,7 +28,7 @@ export const load:PageServerLoad = async({locals:{supabase, user}}) => {
     const total:number = tax + subtotal;
     //paymentアイテムを取得
     const { data:payment } = await supabase.from("payment").select().eq("user_id", user?.id);
-    //
+
     return { subtotal, tax, total, payment };
 }
 
