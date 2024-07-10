@@ -13,10 +13,6 @@ declare global {
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
-		/*interface PageData {
-			session: Session | null
-			user: User | null
-		}*/
 
 	}
 }

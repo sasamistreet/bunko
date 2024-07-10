@@ -1,8 +1,11 @@
 import { redirect } from "@sveltejs/kit";
-import { json } from '@sveltejs/kit';
+//import { json } from '@sveltejs/kit';
 import type { PageServerLoad } from "./$types";
+import { SECRET_STRIPE_KEY } from '$env/static/private'
+import Stripe from 'stripe'
 
 
+/*
 interface paymentItem  {
     id:number,
     price:number,
@@ -12,9 +15,18 @@ interface paymentItem  {
 }
 
 let items:CartItem[] = [];
+*/
 
+export const load:PageServerLoad = async({locals:{supabase, user},url}) => {
 
-export const load:PageServerLoad = async({locals:{supabase, user}}) => {
+    const query = url.searchParams;
+    if (query.get('success')) {
+      console.log('Order placed! You will receive an email confirmation.');
+    }
+
+    if (query.get('canceled')) {
+      console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+    }
     //cartのアイテムを取得
     const { data:items } = await supabase.from("cart").select(`*, Work(title,price)`).eq("user_id", user?.id);
     const taxRate:number = 0.01;
@@ -33,29 +45,24 @@ export const load:PageServerLoad = async({locals:{supabase, user}}) => {
 }
 
 export const actions = {
-    default:async({url, locals:{supabase, user}, request}) => {
-        try{
-            const formData = await request.formData();
-        
-            //Paymentテーブルにアイテムを追加（金額のみ？）　ステータスはProgress
-            const { data } = await supabase.from('payment').insert({user_id:user?.id, price:formData.get('price'), state:"processing"}).returns<paymentItem>();
-            console.log(data)
-            //アイテムごとに
-            for await (const item of items) {
-                //ライブラリにうつして
-                await supabase.from('library').insert({user_id:user?.id, work_id:item.work_id});
-                //カートから削除
-                await supabase.from('cart').delete().eq("id", item.id)
-            }
+    default:async() => {
+        //try-catchだとうまく動かない 勉強
+        const stripe = new Stripe(SECRET_STRIPE_KEY)
 
-            //end
-            await supabase.from('payment').upsert({id:data?.id, state:"paid"});
-            //ステータスをPaidに
-            redirect(302, `${url.origin}/account/library`);
-
-        }catch(error){
-            console.log(error)
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                price: 'price_1KTfddKf3NgKqC99gmaxn8Tt',
+                quantity: 1,
+                },
+            ],
+            mode: 'payment',
+            success_url: 'http://localhost:5173/checkout/?success=true',
+            cancel_url: `http://localhost:5173/checkout/?canceled=true`,
+        });
+        if (session.url != null){
+            console.log(session.url);
+            redirect(303, session.url);
         }
-        
     }
 }

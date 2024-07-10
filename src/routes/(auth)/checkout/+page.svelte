@@ -34,7 +34,7 @@
           <div class="flex justify-between border-b py-4 text-sm"><dt class="text-zinc-400">Tax</dt><dd class="">{tax}</dd></div>
         </dl>
         <div class="flex justify-between py-4 text-lg"><dt class="">Total</dt><dd class="">{total}</dd></div> 
-        <form action="api/checkout_session" method="POST">
+        <form action="" method="POST">
           <Button type="submit" role="link">Checkout</Button>
         </form>
     </div>
