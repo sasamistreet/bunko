@@ -1,5 +1,5 @@
-import {stripe} from '$lib/utils';
-import { error } from '@sveltejs/kit';
+import { stripe } from '$lib/server/stripe.js';
+//import { error } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
 
 
@@ -22,11 +22,10 @@ export async function POST({ request }){
         },
       });
 
-      request.json({account: account.id});
+      return json({account: account.id});
     } catch (error) {
       console.error('An error occurred when calling the Stripe API to create an account:', error);
-      request.status(500);
-      request.json({error: error.message});
+      return json({error: error, status:500});
     }
 
 }

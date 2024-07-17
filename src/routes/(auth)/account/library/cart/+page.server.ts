@@ -35,14 +35,7 @@ export const actions = {
             console.log(error);
         }
         redirect(302, `${url.origin}/checkout`);
-        //Checkoutページに移行、決済方法を指定
-        //
-        //決済処理
-        //成功がリターンしたら
-        //PaymentテーブルのアイテムのステータスをPaidに変更
-        //カートのアイテムをライブラリに移し
-        //ウィッシュリストとカートのテーブルからアイテムを削除
-        //Paidページへジャンプ　ライブラリor作品ページへのリンク
+
     },
     delete:async({ locals:{ supabase }, request }) => {
         const data = await request.formData();
