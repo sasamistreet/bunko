@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { stripe } from '$lib/server/stripe';
-import fulfillCheckout from '@/lib/server/fulfill_checkout';
+import fulfillCheckout from '$lib/server/fulfill_checkout';
 /*import {
 	manageSubscriptionStatusChange,
 	upsertPriceRecord,
@@ -16,10 +16,27 @@ const relevantEvents = new Set([
 	'price.updated',
 	'checkout.session.completed',
     'checkout.session.async_payment_succeeded',
+	'checkout.session.async_payment_failed',
 	'customer.subscription.created',
 	'customer.subscription.updated',
 	'customer.subscription.deleted'
 ]);
+/*
+const fulfillOrder = (session) => {
+  // TODO: fill me in
+  console.log("Fulfilling order", session);
+}
+*/
+
+const createOrder = (session:any) => {
+  // TODO: fill me in
+  console.log("Creating order", session);
+}
+
+const emailCustomerAboutFailedPayment = (session:any) => {
+  // TODO: fill me in
+  console.log("Emailing customer", session);
+}
 
 export const POST: RequestHandler = async ({ request }) => {
 	const sig = request.headers.get('stripe-signature');
@@ -57,11 +74,18 @@ export const POST: RequestHandler = async ({ request }) => {
 					);*/
 					break;
 				case 'checkout.session.completed':
-					fulfillCheckout(event.data.object.id);
+					//fulfillCheckout(event.data.object.id);
+					const session = event.data.object;
+					// Save an order in your database, marked as 'awaiting payment'
+					createOrder(session);
 					break;
                 case 'checkout.session.async_payment_succeeded':
                     fulfillCheckout(event.data.object.id);
                     break;
+				case 'checkout.session.async_payment_failed': 
+					// Send an email to the customer asking them to retry their order
+					emailCustomerAboutFailedPayment(event.data.object);
+					break;
 				default:
 					throw new Error('Unhandled relevant event!');
 			}

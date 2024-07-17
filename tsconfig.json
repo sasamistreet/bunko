@@ -10,14 +10,15 @@
 		"sourceMap": true,
 		"strict": true,
 		"moduleResolution": "bundler",
-		"baseUrl": "./",
+		/*"baseUrl": "./",
 		"paths": {
 			"@/*": ["./src/*"],
 			"$lib/*": ["./src/lib/*"]
-		},
+		},*/
 	},
-                /* Base directory to resolve non-absolute module names. */
+	                 /* Base directory to resolve non-absolute module names. */
     
+    /* Base directory to resolve non-absolute module names. */
 	"include": ["src", "@types/index.d.ts", ".svelte-kit/ambient.d.ts"]
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
