@@ -8,11 +8,9 @@ export const load = () => {
 export const actions = {
     account:async({request}) => {
         try {
-            const account = await stripe.accounts.create({
-                
-              });
-            console.log(account)
-            return json({account: account.id});
+            const account = await stripe.accounts.create({});
+            const account_serialized = JSON.parse(JSON.stringify(account));
+            return { account: account_serialized.id };
             //throw redirect()
         } catch (error) {
             console.error('An error occurred when calling the Stripe API to create an account:', error);
@@ -22,22 +20,22 @@ export const actions = {
     account_link:async({request}) => {
         try {
             const data = await request.formData();
-            const  account = data.get('account');
-            if (typeof account === "string"){
-              const accountLink = await stripe.accountLinks.create({
-                account: account,
-                refresh_url: `${request.headers.get('origin')}/refresh/${account}`,
-                return_url: `${request.headers.get('origin')}/return/${account}`,
-                type: "account_onboarding",
-              });
-              return json({url: accountLink.url});
-            }
-          } catch (error) {
+            const  account = data.get('account') as string;
+            const accountLink = await stripe.accountLinks.create({
+              account: account,
+              refresh_url: `${request.headers.get('origin')}/account/profile/stripe/refresh/${account}`,
+              return_url: `${request.headers.get('origin')}/account/profile/stripe/return/${account}`,
+              type: "account_onboarding",
+            });
+            console.log(accountLink)
+            const link_serialized = JSON.parse(JSON.stringify(accountLink));
+            return {url: link_serialized.url};
+        } catch (error) {
             console.error(
               "An error occurred when calling the Stripe API to create an account link:",
               error
             );
             return json({ error: error, status:500 });
-          }
+        }
     }
 }

@@ -52,13 +52,26 @@ export const actions = {
         const session = await stripe.checkout.sessions.create({
             line_items: [
                 {
-                price: 'price_1KTfddKf3NgKqC99gmaxn8Tt',
+                //price: 'price_1KTfddKf3NgKqC99gmaxn8Tt',
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                      name: 'T-shirt',
+                    },
+                    unit_amount: 1000,
+                  },
                 quantity: 1,
                 },
             ],
+            payment_intent_data: {
+                application_fee_amount: 123,
+            },
             mode: 'payment',
-            success_url: 'http://localhost:5173/checkout/?success=true',
+            success_url: 'http://localhost:5173/checkout/success?session_id={CHECKOUT_SESSION_ID}',
             cancel_url: `http://localhost:5173/checkout/?canceled=true`,
+        },
+        {
+            stripeAccount: '{{CONNECTED_ACCOUNT_ID}}',
         });
         if (session.url != null){
             console.log(session.url);
