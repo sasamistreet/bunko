@@ -2,18 +2,26 @@
     import StepItem from "./StepItem.svelte"
     import { Button } from "$lib/components/ui/button";
     import { Trash2, BetweenVerticalStart, CheckSquare, Plus } from "lucide-svelte";
-    import { writable } from "svelte/store";
+    //import { writable } from "svelte/store";
     import { quintOut } from "svelte/easing";
     import { flip } from 'svelte/animate';
     import type { PageData } from './$types';
 
-    export let data: PageData;
+    type stepData = {
+      id:string,
+      order:number,
+      path:string
+    }
+
+    let { data } = $props<{ data: PageData }>();
     let mode:string = "normal";
-    let steps = data.order_drafted.steps || [];
-    let dragIndex = writable<number|null>(null);
+    //let steps = data.order_drafted.steps || [];
+    //console.log(data.order_drafted.steps);
+    let steps = $state(data.order_drafted.steps);
+    let dragIndex:number|null = $state(null);
 
     const dragStart = (index:number) => {
-      $dragIndex = index;
+      dragIndex = index;
     }
 
     const dragOver = (id:string) => {
@@ -25,7 +33,6 @@
         const wrapper = document.getElementById(id);
         wrapper?.classList.remove("bg-blue-300");
     }
-
     
     const dragEnd = (id:string) => {
       const wrapper = document.getElementById(id);
@@ -55,11 +62,11 @@
 <div class="grid grid-cols-5 gap-y-4">
   {#each steps as step, index(step.order)}
   <div class="flex" draggable="true" role="presentation" id="{step.id}"
-    on:dragstart={() => dragStart(index)}
-    on:dragover|preventDefault = {() => dragOver(step.order)}
-    on:dragleave={() => dragLeave(step.order)}
-    on:dragend={() => dragEnd(step.order)}
-    on:drop={() => drop(index)}
+    ondragstart={() => dragStart(index)}
+    ondragover = {() => dragOver(step.order)}
+    ondragleave={() => dragLeave(step.order)}
+    ondragend={() => dragEnd(step.order)}
+    ondrop={() => drop(index)}
     animate:flip={{ duration: 400, easing:quintOut }}
   >
   

@@ -3,12 +3,11 @@ import { stripe } from '$lib/server/stripe';
 import { json } from '@sveltejs/kit';
 
 export const load:PageServerLoad = async () => {
-    const connected = true;
     return  { connected:true };
 }
 
 export const actions = {
-    account:async({request}) => {
+    account:async() => {
         try {
             const account = await stripe.accounts.create({});
             const account_serialized = JSON.parse(JSON.stringify(account));

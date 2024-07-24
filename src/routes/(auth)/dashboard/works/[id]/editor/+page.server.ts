@@ -17,10 +17,11 @@ async function getSteps(stepId:string){
 
 async function getOrder(workId:string){
   try {
-    const{ data, error } = await supabase.from("Work").select().eq('id', workId).select('order_drafted').single();
+    const{ data, error } = await supabase.schema('public').from("Work").select().eq('id', workId).select('order_drafted').single();
     if (error) {
       throw error;
     }
+    console.log(data)
     return data;
   } catch (error) {
     console.log(error);
