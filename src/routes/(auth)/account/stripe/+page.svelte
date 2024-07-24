@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { page } from "$app/stores";
     import { enhance, applyAction } from '$app/forms';
     import Button from "$lib/components/ui/button/button.svelte";
 
@@ -8,6 +9,9 @@
     let setError = $state(false);
 </script>
 <div>
+    {#if $page.data.connected == true}
+    <Button>Dashbaord</Button>
+    {/if}
     {#if !accountCreatePending && !connectedAccountId}
     <form action="?/account" method="POST" use:enhance={()=>{
         accountCreatePending = true;

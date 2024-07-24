@@ -1,8 +1,10 @@
+import type { PageServerLoad,} from "./$types";
 import { stripe } from '$lib/server/stripe';
 import { json } from '@sveltejs/kit';
 
-export const load = () => {
-
+export const load:PageServerLoad = async () => {
+    const connected = true;
+    return  { connected:true };
 }
 
 export const actions = {
@@ -23,8 +25,8 @@ export const actions = {
             const  account = data.get('account') as string;
             const accountLink = await stripe.accountLinks.create({
               account: account,
-              refresh_url: `${request.headers.get('origin')}/account/profile/stripe/refresh/${account}`,
-              return_url: `${request.headers.get('origin')}/account/profile/stripe/return/${account}`,
+              refresh_url: `${request.headers.get('origin')}/account/stripe/refresh/${account}`,
+              return_url: `${request.headers.get('origin')}/account/stripe/return/${account}`,
               type: "account_onboarding",
             });
             console.log(accountLink)

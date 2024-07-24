@@ -20,7 +20,6 @@
 		<ul class="leading-8 text-sm py-2 border-b">
 			<li><a href="/account/profile"><User size={16} class="inline mx-4 my-2"/>Profile</a></li>
 			<li><a href="/account/profile/settings"><Settings size={16} class="inline mx-4 my-2"/>Settings</a></li>
-			<li><a href="/account/profile/billing"><WalletCards size={16} class="inline mx-4 my-2"/>Billing</a></li>
 			<li><a href="/account/profile/posts"><StickyNote size={16} class="inline mx-4 my-2"/>Posts</a></li>
 			<li><a href="/account/profile/nortifications"><Bell size={16} class="inline mx-4 my-2"/>Nortifications</a></li>
 		</ul>
