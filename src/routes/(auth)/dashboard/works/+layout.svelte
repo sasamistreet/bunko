@@ -1,4 +1,4 @@
 <script lang="ts">
-    
+    const { children } = $props()
 </script>
-<slot />
+{@render children()}

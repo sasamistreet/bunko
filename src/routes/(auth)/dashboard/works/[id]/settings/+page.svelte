@@ -1,18 +1,10 @@
 <script lang="ts">
+    import * as Form from "$lib/components/ui/form";
     import Button from "$lib/components/ui/button/button.svelte";
     import Input from "$lib/components/ui/input/input.svelte";
     import Textarea from "$lib/components/ui/textarea/textarea.svelte";
     import Label from "$lib/components/ui/label/label.svelte";
-    import Switch from "$lib/components/ui/switch/switch.svelte";
-    import RangeCalendar from "$lib/components/ui/range-calendar/range-calendar.svelte";
-    import AspectRatio from "$lib/components/ui/aspect-ratio/aspect-ratio.svelte";
-    import { today, getLocalTimeZone } from "@internationalized/date";
-    const start = today(getLocalTimeZone());
-    const end = start.add({ days: 7 });
-    let value = {
-        start,
-        end
-    };
+
     import * as RadioGroup from "$lib/components/ui/radio-group";
     import { Checkbox } from "$lib/components/ui/checkbox";
     let checked = false;
@@ -44,23 +36,45 @@
             label: "Pen"
         },
     ]
+
+    import { formSchema, type FormSchema } from "./schema";
+    import{ type SuperValidated, type Infer, superForm, } from "sveltekit-superforms";
+    import { zodClient } from "sveltekit-superforms/adapters";
+    export let data: SuperValidated<Infer<FormSchema>>;
+
+    const form = superForm(data, { validators: zodClient(formSchema) });
+    const { form: formData, enhance } = form;
 </script>
 <div class="container">
-    <ul class="tabmenu pt-4 grid grid-cols-3 text-center">
-        <li><a href="./">Edit</a></li>
-        <li><a href="./summary">Summary</a></li>
-        <li class="current">Settings(Drafted)</li>
-    </ul>
-    <div class="text-right">
-        <Button variant="outline">Save</Button>
-        <Button>Publish</Button>
+    <div class="flex w-full">
+        <div>
+            Settings
+        </div>
+        <div>
+            
+        </div>
     </div>
     <div class="flex gap-8">
         
         <div class="w-2/3">
-            <h2 class="font-bold">Diagrams</h2>
-                <Label for="title">Title</Label>
-                <Input type="text" id="title" placeholder="" class="mb-4" />
+            <form>
+            <Form.Field {form} name="title">
+                <Form.Control>
+                    <Label for="title">Title</Label>
+                    <Input type="text" id="title" placeholder="" class="mb-4" />
+                </Form.Control>
+            </Form.Field>
+                
+                
+                <Label for="description">Description</Label>
+                <Textarea id="description" class="mb-4"/>
+                <Label for="tags">Tags</Label>
+                <Input type="text" id="tags" placeholder="" class="mb-4" />
+                <Label for="seo">SEO Words</Label>
+                <Input type="text" id="seo" placeholder="" class="mb-4" />
+                <Label for="title">Cover Images</Label>
+                <div class="w-[240px] h-[240px] rounded-md border border-dashed"></div>
+
                 <Label for="difficulty text-md">Difficulty</Label>
                 <RadioGroup.Root value="difficulty" class="flex mb-4">
                     <div class="flex items-center space-x-2">
@@ -97,7 +111,7 @@
                     </div>
                     <RadioGroup.Input name="spacing" />
                 </RadioGroup.Root>
-
+            </form>
                 <div class="mb-4">
                 <p class="text-sm font-medium">Shape of Paper</p>
                     {#each shapes as shape}
@@ -117,28 +131,10 @@
                         </Label>
                     {/each}
                 </div>
-                <Label for="description">Description</Label>
-                <Textarea id="description" class="mb-4"/>
-                <Label for="tags">Tags</Label>
-                <Input type="text" id="tags" placeholder="" class="mb-4" />
-                <Label for="seo">SEO Words</Label>
-                <Input type="text" id="seo" placeholder="" class="mb-4" />
         </div>
-        <div class="w-1/3">
-            <Label for="price">Price</Label>
-            <Input id="price" type="number" class="mb-8"/>
-            <div class="flex justify-between mb-2">
-                <h3>Sale</h3>
-                <Switch id="sale" />
-                <Label for="sale"></Label>
-            </div>
-            <Label for="sale">Rate</Label>
-            <div class="flex mb-4">
-                <Input id="sale" type="number" class="max-w-20"/><span class="text-xl">%</span>
-            </div>
-            <Label for="saledate">Date</Label>
-            <div class="flex">
-                <RangeCalendar bind:value class="border rounded-md" id="saledate"/>
+        <div class="w-1/3 relative">
+            <div class="fixed">
+                <Button>Publish</Button>
             </div>
         </div>
     </div>

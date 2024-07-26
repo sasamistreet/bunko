@@ -4,7 +4,7 @@
     import * as Card from "$lib/components/ui/card";
     import * as Select from "$lib/components/ui/select";
     import AspectRatio from "$lib/components/ui/aspect-ratio/aspect-ratio.svelte";
-    import { Check, Briefcase } from "lucide-svelte";
+    import { Check } from "lucide-svelte";
 
     const periods = [
       { value: "Daily", label: "Daily" },
@@ -22,9 +22,9 @@
         <Select.Content>
           <Select.Group>
             {#each periods as period}
-              <Select.Item value={period.value} label={period.label}
-                >{period.label}</Select.Item
-              >
+              <Select.Item value={period.value} label={period.label}>
+                {period.label}
+              </Select.Item>
             {/each}
           </Select.Group>
         </Select.Content>

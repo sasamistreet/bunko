@@ -39,7 +39,7 @@
                 </Button>
                 <span>Toggle theme</span>
             </li>
-            <li class="pl-3 py-3"><a href="/account" class="text-slate-600 hover:text-current"><CircleUserRound class="inline mr-4" size={24} /><a href="/account">Account Page</a></li>
+            <li class="pl-3 py-3"><a href="/account" class="text-slate-600 hover:text-current"><CircleUserRound class="inline mr-4" size={24} />Account Page</a></li>
         </ul>
     </div>
 </div>
