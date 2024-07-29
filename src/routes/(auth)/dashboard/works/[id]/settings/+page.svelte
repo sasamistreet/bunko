@@ -7,6 +7,7 @@
 
     import * as RadioGroup from "$lib/components/ui/radio-group";
     import { Checkbox } from "$lib/components/ui/checkbox";
+    
     let checked = false;
     const shapes = [
         {
@@ -16,6 +17,10 @@
         {
             id: "rectangle",
             label: "Rectangle"
+        },
+        {
+            id: "other",
+            label: "Other"
         }
     ]
     const tools = [
@@ -42,8 +47,13 @@
     import { zodClient } from "sveltekit-superforms/adapters";
     export let data: SuperValidated<Infer<FormSchema>>;
 
-    const form = superForm(data, { validators: zodClient(formSchema) });
+    const form = superForm(data, { 
+        validators: zodClient(formSchema),
+        dataType:'json'
+    });
     const { form: formData, enhance } = form;
+
+
 </script>
 <div class="container">
     <div class="flex w-full">
@@ -55,86 +65,108 @@
         </div>
     </div>
     <div class="flex gap-8">
-        
         <div class="w-2/3">
-            <form>
-            <Form.Field {form} name="title">
-                <Form.Control>
-                    <Label for="title">Title</Label>
-                    <Input type="text" id="title" placeholder="" class="mb-4" />
+            <form method="POST" use:enhance>
+            <Form.Field {form} name="title" class="mb-8">
+                <Form.Control let:attrs>
+                    <Form.Label for="title">Title</Form.Label>
+                    <Input {...attrs} type="text" id="title" placeholder="" class="mb-4" />
                 </Form.Control>
+                <Form.FieldErrors />
             </Form.Field>
-                
-                
-                <Label for="description">Description</Label>
-                <Textarea id="description" class="mb-4"/>
-                <Label for="tags">Tags</Label>
-                <Input type="text" id="tags" placeholder="" class="mb-4" />
-                <Label for="seo">SEO Words</Label>
-                <Input type="text" id="seo" placeholder="" class="mb-4" />
-                <Label for="title">Cover Images</Label>
-                <div class="w-[240px] h-[240px] rounded-md border border-dashed"></div>
+            <Form.Field {form} name="description" class="mb-8">
+                <Form.Control let:attrs>
+                    <Form.Label for="description">Description</Form.Label>
+                    <Textarea {...attrs} id="description" class="mb-4"/>
+                </Form.Control>
+                <Form.FieldErrors />
+            </Form.Field>
+            <Form.Field {form} name="tags" class="mb-8">
+                <Form.Control let:attrs>
+                    <Form.Label for="tags">Tags</Form.Label>
+                    <Input {...attrs} type="text" id="tags" placeholder="" class="mb-4" />
+                </Form.Control>
+                <Form.FieldErrors />
+            </Form.Field>
+            <Form.Field {form} name="seo" class="mb-8">
+                <Form.Control let:attrs>
+                    <Form.Label for="seo">SEO Words</Form.Label>
+                    <Input type="text" id="seo" placeholder="" class="mb-4" />
+                </Form.Control>
+                <Form.FieldErrors />
+            </Form.Field>
+            
+            <div class="mb-8">
+            <Label for="title">Cover Images</Label>
+            <div class="w-[240px] h-[240px] rounded-md border border-dashed"></div>
+            </div>
 
-                <Label for="difficulty text-md">Difficulty</Label>
-                <RadioGroup.Root value="difficulty" class="flex mb-4">
-                    <div class="flex items-center space-x-2">
-                    <RadioGroup.Item value="easy" id="r1" />
-                    <Label for="r1">Easy</Label>
+            <Form.Fieldset {form} name="sheets" class="mb-8">
+                
+                <Form.Legend class="text-base">Sheets of Paper</Form.Legend>
+                <RadioGroup.Root value="sheets" class="flex flex-col space-y-1">
+                    <div class="flex items-center space-x-3 space-y-0">
+                        <Form.Control let:attrs>
+                            <RadioGroup.Item value="one" {...attrs}/>
+                            <Form.Label class="font-normal">One</Form.Label>
+                        </Form.Control>
+                    </div>
+                    <div class="flex items-center space-x-2 space-y-0">
+                        <Form.Control let:attrs>
+                            <RadioGroup.Item value="multiple" {...attrs}/>
+                            <Form.Label class="font-normal">Multiple</Form.Label>
+                        </Form.Control>
                     </div>
                     <div class="flex items-center space-x-2">
-                    <RadioGroup.Item value="intermediate" id="r2" />
-                    <Label for="r2">Intermediate</Label>
+                        <Form.Control let:attrs>
+                            <RadioGroup.Item value="moduler" {...attrs}/>
+                            <Form.Label class="font-normal">Moduler</Form.Label>
+                        </Form.Control>
                     </div>
-                    <div class="flex items-center space-x-2">
-                    <RadioGroup.Item value="difficult" id="r3" />
-                    <Label for="r3">Difficult</Label>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <RadioGroup.Item value="supercomplex" id="r3" />
-                        <Label for="r3">Super Complex</Label>
-                    </div>
-                    <RadioGroup.Input name="spacing" />
+                    <RadioGroup.Input name="sheets" />
                 </RadioGroup.Root>
-                <Label for="sheets">Sheets of Paper</Label>
-                <RadioGroup.Root value="sheets" class="flex mb-4">
-                    <div class="flex items-center space-x-2">
-                    <RadioGroup.Item value="one" id="r1" />
-                    <Label for="r1">One</Label>
+                <Form.FieldErrors />
+            </Form.Fieldset>
+            <Form.Fieldset {form} name="shape" class="mb-8">
+                <Form.Control let:attrs>
+                    <Form.Legend class="text-base">Shape of Paper</Form.Legend>
+                    <div class="space-y-3">
+                        {#each shapes as shape}
+                        <div class="flex flex-row items-start space-x-1">
+                            <Form.Control let:attrs>
+                            <Checkbox id="{shape.id}" aria-labelledby="shapes-label" />
+                            <Form.Label id="{shape.label}" for="{shape.id}" class="font-normal">
+                                {shape.label}
+                            </Form.Label>
+                            </Form.Control>
+                        </div>
+                        {/each}
                     </div>
-                    <div class="flex items-center space-x-2">
-                    <RadioGroup.Item value="multiple" id="r2" />
-                    <Label for="r2">multiple</Label>
+                </Form.Control>
+            </Form.Fieldset>
+            <Form.Fieldset {form} name="tools" class="mb-8">
+                    <div class="mb-4">
+                    <Form.Legend class="text-base">Tools</Form.Legend>
                     </div>
-                    <div class="flex items-center space-x-2">
-                    <RadioGroup.Item value="moduler" id="r3" />
-                    <Label for="r3">Moduler</Label>
-                    </div>
-                    <RadioGroup.Input name="spacing" />
-                </RadioGroup.Root>
-            </form>
-                <div class="mb-4">
-                <p class="text-sm font-medium">Shape of Paper</p>
-                    {#each shapes as shape}
-                        <Checkbox id="{shape.id}" aria-labelledby="shapes-label" />
-                        <Label id="{shape.label}" for="{shape.id}" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            {shape.label}
-                        </Label>
-                    {/each}
-                </div>
-
-                <div class="mb-4">
-                    <p class="text-sm font-medium">Tools</p>
+                    <div class="space-y-3">
                     {#each tools as tool}
-                        <Checkbox id="{tool.id}" aria-labelledby="tools-label" />
-                        <Label id="{tool.label}" for="{tool.id}" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    <div class="flex flex-row items-start space-x-1">
+                    <Form.Control let:attrs>
+                        <Checkbox {...attrs} {checked} onCheckedChange={()=>{}} id="{tool.id}" aria-labelledby="tools-label" />
+                        <Form.Label id="{tool.label}" for="{tool.id}" class="font-normal">
                             {tool.label}
-                        </Label>
+                        </Form.Label>
+                        <input hidden type="checkbox" name={attrs.name} value={tool.id} {checked}/>
+                    </Form.Control>
+                    </div>
                     {/each}
-                </div>
+                    </div>
+            </Form.Fieldset>
+            </form>
         </div>
         <div class="w-1/3 relative">
             <div class="fixed">
-                <Button>Publish</Button>
+                <Button>Save</Button>
             </div>
         </div>
     </div>
