@@ -2,8 +2,8 @@
     import { page } from '$app/stores';
     const { children } = $props();
 </script>
-<div class="">
-  <div class="flex">
+
+  <div class="flex max-h-screen">
     <div class="min-w-[120px] pr-4 border-r">
     <nav class="fixed">
       <h1 class="text-xl font-bold">Title</h1>
@@ -19,4 +19,3 @@
         {@render children()}
     </div>
   </div>
-</div>

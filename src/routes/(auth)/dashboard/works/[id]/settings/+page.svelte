@@ -53,17 +53,16 @@
     });
     const { form: formData, enhance } = form;
 
-
 </script>
-<div class="container">
-    <div class="flex w-full">
-        <div>
-            Settings
-        </div>
-        <div>
-            
-        </div>
+<div class="flex w-full justify-between bg-white shadow-sm z-50">
+    <div>
+        Settings
     </div>
+    <div>
+        <Button>Save</Button>
+    </div>
+</div>
+<div class="container max-h-full overflow-y-scroll fixed z-10">
     <div class="flex gap-8">
         <div class="w-2/3">
             <form method="POST" use:enhance>
@@ -97,12 +96,11 @@
             </Form.Field>
             
             <div class="mb-8">
-            <Label for="title">Cover Images</Label>
-            <div class="w-[240px] h-[240px] rounded-md border border-dashed"></div>
+                <Label for="title">Cover Images</Label>
+                <div class="w-[240px] h-[240px] rounded-md border border-dashed"></div>
             </div>
 
             <Form.Fieldset {form} name="sheets" class="mb-8">
-                
                 <Form.Legend class="text-base">Sheets of Paper</Form.Legend>
                 <RadioGroup.Root value="sheets" class="flex flex-col space-y-1">
                     <div class="flex items-center space-x-3 space-y-0">
@@ -166,7 +164,7 @@
         </div>
         <div class="w-1/3 relative">
             <div class="fixed">
-                <Button>Save</Button>
+                
             </div>
         </div>
     </div>

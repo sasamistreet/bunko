@@ -5,8 +5,6 @@
 </script>
 <Sidebar />
 <Headbar/>
-<main class="pl-12 min-h-fit dark:bg-stone-600 h-screen">
-    <div class="container py-4">
-        {@render children()}
-    </div>
+<main class="pl-12 dark:bg-stone-600 h-screen box-content">
+    {@render children()}
 </main>
