@@ -54,17 +54,10 @@
     const { form: formData, enhance } = form;
 
 </script>
-<div class="flex w-full justify-between bg-white shadow-sm z-50">
-    <div>
-        Settings
-    </div>
-    <div>
-        <Button>Save</Button>
-    </div>
-</div>
-<div class="container max-h-full overflow-y-scroll fixed z-10">
-    <div class="flex gap-8">
-        <div class="w-2/3">
+
+<div class="container overflow-y-scroll z-10 pb-12 pt-4">
+    <div class="w-full box-content">
+        <div class="shadow box-border p-4 m-4">
             <form method="POST" use:enhance>
             <Form.Field {form} name="title" class="mb-8">
                 <Form.Control let:attrs>
@@ -94,12 +87,6 @@
                 </Form.Control>
                 <Form.FieldErrors />
             </Form.Field>
-            
-            <div class="mb-8">
-                <Label for="title">Cover Images</Label>
-                <div class="w-[240px] h-[240px] rounded-md border border-dashed"></div>
-            </div>
-
             <Form.Fieldset {form} name="sheets" class="mb-8">
                 <Form.Legend class="text-base">Sheets of Paper</Form.Legend>
                 <RadioGroup.Root value="sheets" class="flex flex-col space-y-1">
@@ -127,18 +114,22 @@
             </Form.Fieldset>
             <Form.Fieldset {form} name="shape" class="mb-8">
                 <Form.Control let:attrs>
-                    <Form.Legend class="text-base">Shape of Paper</Form.Legend>
-                    <div class="space-y-3">
-                        {#each shapes as shape}
-                        <div class="flex flex-row items-start space-x-1">
-                            <Form.Control let:attrs>
-                            <Checkbox id="{shape.id}" aria-labelledby="shapes-label" />
-                            <Form.Label id="{shape.label}" for="{shape.id}" class="font-normal">
-                                {shape.label}
-                            </Form.Label>
-                            </Form.Control>
+                    <div class="flex">
+                        <div class="w-1/4">
+                            <Form.Legend class="text-base">Shape of Paper</Form.Legend>
                         </div>
-                        {/each}
+                        <div class="space-y-3 w-3/4">
+                            {#each shapes as shape}
+                            <div class="flex flex-row items-start space-x-1">
+                                <Form.Control let:attrs>
+                                <Checkbox id="{shape.id}" aria-labelledby="shapes-label" />
+                                <Form.Label id="{shape.label}" for="{shape.id}" class="font-normal">
+                                    {shape.label}
+                                </Form.Label>
+                                </Form.Control>
+                            </div>
+                            {/each}
+                        </div>
                     </div>
                 </Form.Control>
             </Form.Fieldset>
@@ -160,12 +151,12 @@
                     {/each}
                     </div>
             </Form.Fieldset>
+            <Button>Save</Button>
             </form>
         </div>
-        <div class="w-1/3 relative">
-            <div class="fixed">
-                
-            </div>
+        <div class="m-8 p-4 shadow">
+            <Label for="title">Cover Images</Label>
+            <div class="w-[240px] h-[240px] rounded-md border border-dashed"></div>
         </div>
     </div>
 </div>
