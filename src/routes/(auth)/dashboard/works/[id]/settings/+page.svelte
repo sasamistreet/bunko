@@ -57,7 +57,7 @@
 
 <div class="container overflow-y-scroll z-10 pb-12 pt-4">
     <div class="w-full box-content">
-        <div class="shadow box-border p-4 m-4">
+        <div class="shadow box-border p-8 mb-8 bg-white">
             <form method="POST" use:enhance>
             <Form.Field {form} name="title" class="mb-8">
                 <Form.Control let:attrs>
@@ -87,34 +87,36 @@
                 </Form.Control>
                 <Form.FieldErrors />
             </Form.Field>
-            <Form.Fieldset {form} name="sheets" class="mb-8">
-                <Form.Legend class="text-base">Sheets of Paper</Form.Legend>
-                <RadioGroup.Root value="sheets" class="flex flex-col space-y-1">
-                    <div class="flex items-center space-x-3 space-y-0">
-                        <Form.Control let:attrs>
-                            <RadioGroup.Item value="one" {...attrs}/>
-                            <Form.Label class="font-normal">One</Form.Label>
-                        </Form.Control>
-                    </div>
-                    <div class="flex items-center space-x-2 space-y-0">
-                        <Form.Control let:attrs>
-                            <RadioGroup.Item value="multiple" {...attrs}/>
-                            <Form.Label class="font-normal">Multiple</Form.Label>
-                        </Form.Control>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <Form.Control let:attrs>
-                            <RadioGroup.Item value="moduler" {...attrs}/>
-                            <Form.Label class="font-normal">Moduler</Form.Label>
-                        </Form.Control>
-                    </div>
-                    <RadioGroup.Input name="sheets" />
-                </RadioGroup.Root>
+            <Form.Fieldset {form} name="sheets" class="border-t pt-4 mb-4">
+                <div class="flex border-b pb-4">
+                    <Form.Legend class="text-base w-1/4">Sheets of Paper</Form.Legend>
+                    <RadioGroup.Root value="sheets" class="flex flex-col w-3/4 space-y-1">
+                        <div class="flex items-center space-x-3 space-y-0">
+                            <Form.Control let:attrs>
+                                <RadioGroup.Item value="one" {...attrs}/>
+                                <Form.Label class="font-normal">One</Form.Label>
+                            </Form.Control>
+                        </div>
+                        <div class="flex items-center space-x-2 space-y-0">
+                            <Form.Control let:attrs>
+                                <RadioGroup.Item value="multiple" {...attrs}/>
+                                <Form.Label class="font-normal">Multiple</Form.Label>
+                            </Form.Control>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <Form.Control let:attrs>
+                                <RadioGroup.Item value="moduler" {...attrs}/>
+                                <Form.Label class="font-normal">Moduler</Form.Label>
+                            </Form.Control>
+                        </div>
+                        <RadioGroup.Input name="sheets" />
+                    </RadioGroup.Root>
+                </div>
                 <Form.FieldErrors />
             </Form.Fieldset>
-            <Form.Fieldset {form} name="shape" class="mb-8">
+            <Form.Fieldset {form} name="shape" class="mb-4">
                 <Form.Control let:attrs>
-                    <div class="flex">
+                    <div class="flex border-b pb-4">
                         <div class="w-1/4">
                             <Form.Legend class="text-base">Shape of Paper</Form.Legend>
                         </div>
@@ -134,10 +136,11 @@
                 </Form.Control>
             </Form.Fieldset>
             <Form.Fieldset {form} name="tools" class="mb-8">
-                    <div class="mb-4">
+                <div class="flex">
+                    <div class="mb-4 w-1/4">
                     <Form.Legend class="text-base">Tools</Form.Legend>
                     </div>
-                    <div class="space-y-3">
+                    <div class="space-y-3 w-3/4">
                     {#each tools as tool}
                     <div class="flex flex-row items-start space-x-1">
                     <Form.Control let:attrs>
@@ -150,13 +153,20 @@
                     </div>
                     {/each}
                     </div>
+                </div>
             </Form.Fieldset>
-            <Button>Save</Button>
+            <div class="text-right">
+                <Button>Save</Button>
+            </div>
+            
             </form>
         </div>
-        <div class="m-8 p-4 shadow">
+        <div class="pt-4 px-8 pb-8 shadow bg-white">
             <Label for="title">Cover Images</Label>
-            <div class="w-[240px] h-[240px] rounded-md border border-dashed"></div>
+            <div class="flex space-x-4 mt-4">
+                <div class="w-[180px] h-[180px] rounded-md border border-dashed"></div>
+                <div class="w-[180px] h-[180px] rounded-md border border-dashed"></div>
+            </div>
         </div>
     </div>
 </div>
