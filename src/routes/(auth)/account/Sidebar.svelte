@@ -8,7 +8,6 @@
 
 <div class="w-12 pt-12 fixed h-full bg-white overflow-hidden border-r hover:w-40  hover:shadow-lg hover:border-none transition-all">
 	<div class="w-40 flex flex-col h-full pb-16">
-
 		<ul class="text-sm border-b">
 			<li><a href="/account" class="block hover:bg-slate-100 px-4 py-3"><Home class="inline mr-4" size={16} strokeWidth={2}/>Home</a></li>
 		</ul>
@@ -18,7 +17,7 @@
 		</ul>
 		<ul class="leading-8 text-sm py-2 border-b">
 			<li><a href="/account/library"><Library class="inline mx-4 my-2" size={16} strokeWidth={2}/>Library</a></li>
-			<li><a href="/account/wishlist"><Bookmark size={16} class="inline mx-4 my-2"/>wishlist</a></li>
+			<li><a href="/account/wishlist"><Bookmark size={16} class="inline mx-4 my-2"/>Wishlist</a></li>
 			<li><a href="/account/cart"><ShoppingCart size={16} class="inline mx-4 my-2"/>Cart</a></li>
 		</ul>
 		<ul class="leading-8 text-sm py-2 border-b">

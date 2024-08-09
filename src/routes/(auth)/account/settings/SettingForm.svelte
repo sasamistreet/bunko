@@ -17,7 +17,7 @@
     });
    
     const { form: formData, enhance } = form;
-  </script>
+</script>
 
 <form method="POST" use:enhance>
     <Form.Field {form} name="marketing_emails">
@@ -43,8 +43,6 @@
           </div>
           <Switch
             {...attrs}
-            aria-readonly
-            disabled
             includeInput
             bind:checked={$formData.security_emails}
           />

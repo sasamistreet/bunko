@@ -1,7 +1,6 @@
 <script>
     import { AspectRatio } from "$lib/components/ui/aspect-ratio"
     import * as Select from "$lib/components/ui/select";
-    import { Toggle } from "$lib/components/ui/toggle";
     const sorts = [
         { value: "date", label: "Date" },
         { value: "name", label: "Name" },

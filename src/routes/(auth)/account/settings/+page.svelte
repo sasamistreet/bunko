@@ -6,22 +6,23 @@
   export let data: PageData;
   
 </script>
-
+<div class="max-w-[640px] mx-auto">
   <div>
       breadcrumb
   </div>
-  <div class="flex items-center justify-between mb-4 p-4">
+  <div class="flex items-center justify-between mb-4 py-4">
       <h2 class="text-3xl font-bold tracking-tight">Settings</h2>
   </div>
-<h3>Email Settings</h3> 
-<div class="shadow p-4 my-8">
-  <SettingForm  data={data.form} />
-</div>
-<h3>Card Settings</h3> 
-<div class="shadow p-4 my-8">
-  <Button variant="outline">Connect</Button>
-</div>
-<h3>Stripe Settings</h3> 
-<div>
+  <h2 class="mb-4">Email Settings</h2> 
+  <div class="shadow p-4 mb-8 bg-white">
+    <SettingForm data={data.form} />
+  </div>
+  <h2 class="mb-4">Stripe Settings</h2> 
+  <div class="shadow p-4 mb-8 bg-white">
+    <Button variant="outline">Connect</Button>
+  </div>
+  <h2 class="mb-4">Privacy Settings</h2> 
+  <div class="shadow p-4 mb-8 bg-white">
 
+  </div>
 </div>

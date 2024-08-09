@@ -13,6 +13,7 @@
 			console.error(error);
 		}
 	};
+	
 </script>
 <Sidebar />
 <Header>

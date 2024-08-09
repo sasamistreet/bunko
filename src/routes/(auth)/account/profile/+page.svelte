@@ -3,7 +3,7 @@
     import ProfileForm from "./ProfileForm.svelte";
     export let data: PageData;
 </script>
-<div class="mb-8">
+<div class="mb-8 max-w-[640px] mx-auto">
     <div>
         breadcrumb
     </div>
