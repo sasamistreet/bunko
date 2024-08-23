@@ -12,13 +12,16 @@
 		<AspectRatio ratio={16 / 9} class="bg-muted">
 			
 		</AspectRatio>
-		<Avatar.Root>
-			<Avatar.Image src="https://github.com/shadcn.png" alt="@shadcn" />
-			<Avatar.Fallback>CN</Avatar.Fallback>
-		</Avatar.Root>
-		<Card.Content>
-			<Card.Title>Card Title</Card.Title>
-			<Card.Description>Card Description</Card.Description>
+		
+		<Card.Content class="p-2 flex align-center">
+			<Avatar.Root class="mr-2">
+				<Avatar.Image src="https://github.com/shadcn.png" alt="@shadcn" />
+				<Avatar.Fallback>CN</Avatar.Fallback>
+			</Avatar.Root>
+			<div>
+				<Card.Title><a href="./users/aaa">AAA</a></Card.Title>
+				<Card.Description>@aaa_aaa</Card.Description>
+			</div>
 		</Card.Content>
 	</Card.Root>
 </div>
