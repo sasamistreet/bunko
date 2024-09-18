@@ -8,7 +8,7 @@
 	import { AspectRatio } from "$lib/components/ui/aspect-ratio";
 	const userId = $page.params.id;
 </script>
-<div class="flex mx-auto gap-8 my-8 mx-8">
+<div class="flex mx-auto container gap-8 my-8 mx-8">
 	<div class="w-[240px]">
 		<div class="flex items-center">
 			<Avatar.Root class="mr-2 h-16 w-16">
