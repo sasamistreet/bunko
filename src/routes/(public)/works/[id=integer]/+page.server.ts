@@ -1,12 +1,11 @@
 import type { PageServerLoad } from './$types';
 
 
-
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({locals:{user, supabase}, params}) => {
     try {
-        /*depends('supabase:db:Work');
-        const { data: work } = await supabase.from('Work').select().eq('id', params.id);
-        return { work: work ?? [] }; */
+        const { data } = await supabase.from('work').select(`*, profile(display_name)`).eq('id', params.id).limit(1).single();
+        const work = data;
+        return { work }; 
     } catch (error) {
         return { error }
     };

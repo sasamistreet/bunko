@@ -1,26 +1,51 @@
 <script>
+    import { onMount } from 'svelte';
     import { AspectRatio } from "$lib/components/ui/aspect-ratio";
     import { badgeVariants } from "$lib/components/ui/badge";
-
     import * as Tabs from "$lib/components/ui/tabs";
     import { Heart, ThumbsUp} from "lucide-svelte";
     import PriceBox from "./PriceBox.svelte"
+    import Viewer from "./Viewer.svelte"
 	import { page } from "$app/stores";
 	
-    let data = $page.data
-    let session = data.session
-    let workId = Number($page.params.id)
+    const data = $page.data
+    //const session = data.session
+    const work = data.work
+    const workId = Number($page.params.id)
+
+    const isFree = false;
+    let isLibrary = false;
+
+    onMount(() => {
+        checkLibrary();
+	});
+
+    async function checkLibrary() {
+		const library = await fetch(`/api/library/${workId}`).then((res) => res.json());
+        console.log(library);
+        if ( Object.keys(library.data).length == 0){
+            isLibrary = false;
+        } else {
+            isLibrary = true;
+        }
+	}
 
 </script>
 <div class="flex bg-slate-700 items-center">
-    {#if session}
-    <PriceBox workId={workId}/>
+    {#if isFree}
+        <Viewer/>
+    {:else}
+        {#if isLibrary}
+            <Viewer/>
+        {:else}
+            <PriceBox workId={workId}/>
+        {/if}
     {/if}
 </div>
 <div class="md:w-[640px] mx-auto my-4 flex justify-between">
     <div>
-        <h1 class="text-xl">Title</h1>
-        <p class="text-xs">by <a href="/@user">author</a></p>
+        <h1 class="text-xl">{work.title}</h1>
+        <p class="text-xs">by <a href="/@user">{work.profile.display_name}</a></p>
     </div>
 </div>
 <div class="md:w-[640px] mx-auto flex gap-8 mb-8">

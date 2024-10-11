@@ -1,4 +1,5 @@
 <script>
+    import { page } from "$app/stores";
     import { AspectRatio } from "$lib/components/ui/aspect-ratio"
     import * as Select from "$lib/components/ui/select";
     const sorts = [
@@ -25,12 +26,14 @@
     </div>
 
     <div class="grid grid-cols-6 md:grid-cols-4 grid-cols-2 gap-4">
+        {#each $page.data.items as item}
         <div>
-            <a href="/works/1">
+            <a href="/works/{item.work.id}">
                 <AspectRatio ratio={1 / 1} class="bg-muted"></AspectRatio>
             </a>
-            <p class="mt-2">title</p>
+            <p class="mt-2">{item.work.title}</p>
             <p class="text-xs">by author</p>
         </div>
+        {/each}
     </div>
 </div>

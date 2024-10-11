@@ -15,7 +15,7 @@
 				 * triggering function from completing
 				 */
 				setTimeout(() => {
-					goto('/', { invalidateAll: true });
+					//goto('/', { invalidateAll: true });
 				});
 			}
 			if (newSession?.expires_at !== session?.expires_at) {
