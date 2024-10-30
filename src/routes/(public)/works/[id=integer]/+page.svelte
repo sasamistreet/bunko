@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, setContext } from 'svelte';
     import { AspectRatio } from "$lib/components/ui/aspect-ratio";
     import { badgeVariants } from "$lib/components/ui/badge";
     import * as Tabs from "$lib/components/ui/tabs";
@@ -20,6 +20,8 @@
         checkLibrary();
 	});
 
+    //setContext('info', { work, total });
+
     async function checkLibrary() {
 		const library = await fetch(`/api/library/${workId}`).then((res) => res.json());
         console.log(library);
@@ -31,12 +33,13 @@
 	}
 
 </script>
-<div class="flex bg-slate-700 items-center">
+
+<div class="bg-slate-700 items-center">
     {#if isFree}
-        <Viewer/>
+        <Viewer total={100}/>
     {:else}
         {#if isLibrary}
-            <Viewer/>
+            <Viewer total={100} />
         {:else}
             <PriceBox workId={workId}/>
         {/if}

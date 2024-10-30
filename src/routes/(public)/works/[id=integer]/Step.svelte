@@ -1,15 +1,21 @@
 <script lang="ts">
     import { onMount, onDestroy, getContext } from 'svelte';
-    //import { current } from '$lib/stores';
+    import { page } from '$app/stores';
+    import { Maximize2, Minimize2, Eraser } from 'lucide-svelte'
+    //import { current } from './stores'
 
-
-    //export let step = 1;
-    const { step, isCurrent } = $props();
-    //const work = getContext('info').work;
-    //const totalstep = getContext('info').totalstep;
-    const stepData = {};
-    const rootUrl = {}; 
+    const { step, total, current } = $props();
+    //let isCurrent = $state(false);
+    let left = $state(50);
+	let top = $state(50);
     let scale:number = $state(1);
+    const work = $page.params.id
+
+    const stepData = {};
+    const rootUrl = {
+        "publicUrl" : ""
+    }; 
+    
     let width = $derived(100 * scale);
     let item: HTMLImageElement;
     onMount(async() => {
@@ -28,6 +34,7 @@
 	});
 
     onDestroy(() => {
+        console.log("destroyed")
 	});
 
     function expand() {
@@ -42,8 +49,7 @@
         scale = 1;
     }
 
-    let left = 50;
-	let top = 50
+    
 
 	let moving = false;
 	function onMouseDown() {
@@ -51,7 +57,7 @@
         console.log(moving);
 	}
 
-    function onMouseMove(e) {
+    function onMouseMove(e:MouseEvent) {
         if (moving) {
             left += e.movementX;
 			top += e.movementY;
@@ -60,36 +66,35 @@
     
     function onMouseUp() {
         moving = false;
-        console.log(moving);
 	}
     
 </script>
-<svelte:window on:mousemove={onMouseMove}  on:mouseup={onMouseUp}/>
+<svelte:window onmousemove={onMouseMove}  onmouseup={onMouseUp}/>
     <div class="viewBox">
-        <img bind:this={item} role="presentation" on:mousedown={onMouseDown} style:left={left}px style:top={top}px src="{rootUrl.publicUrl}" height="{width}" width="{width}" class="media" alt=""/>
+        <img bind:this={item} role="presentation" onmousedown={onMouseDown} style:left={left}px style:top={top}px src="{rootUrl.publicUrl}" height="{width}" width="{width}" class="media" alt=""/>
         <!--<object on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;"  role="figure" aria-label="" title="" type="image/svg+xml" data="{rootUrl.publicUrl}" class="media" height="{width}" width="{width}"></object>-->
     </div>
-    {#if isCurrent}
-    <div class="steptools uk-flex uk-flex-between uk-width-1-1 uk-padding-small">
-        <div class="uk-align-left">
-            <button on:click={expand}><span data-uk-icon="expand"></span></button>
-            <button on:click={shrink}><span data-uk-icon="shrink"></span></button>
-            <button on:click={reset}><span data-uk-icon="refresh"></span></button>
+    {#if step == current}
+    <div class="steptools flex flex-between w-full p-2">
+        <div class="text-left">
+            <button onclick={expand}><Maximize2 strokeWidth={1} /></button>
+            <button onclick={shrink}><Minimize2 strokeWidth={1} /></button>
+            <button onclick={reset}><Eraser strokeWidth={1} /></button>
         </div>
-        <div class="uk-align-right">
+        <div class="text-right">
             <span data-uk-icon="image"></span>
             <span data-uk-icon="play-circle"></span>
         </div>
     </div>
     <div class="stepinfo">
         <div class="number">
-            <span class="current-number uk-width-1-6">{$current}</span>/{totalstep}
+            <span class="current-number w-1/6">{step}</span>/{total}
         </div>
-        <p class="description uk-width-expand">
+        <p class="description w-full">
             this is description.
         </p>
-        <div class="buttons uk-width-1-6">
-            <span class="uk-margin-small-right" data-uk-icon="comments"></span>6
+        <div class="buttons w-1/6">
+            <span class="mr-2" data-uk-icon="comments"></span>6
         </div>
     </div>
     {/if}

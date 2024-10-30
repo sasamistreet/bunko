@@ -3,22 +3,27 @@
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { flip } from 'svelte/animate';
-	//import Step from './Step.svelte';
+	import { ChevronLeft, ChevronRight } from 'lucide-svelte'
+	import Step from './Step.svelte';
+	//import { current, steps } from './stores'
+	import { page } from '$app/stores';
 	
-    let current = $state(1);
+    let current = $state(3);
     let steps = $derived([current-2, current-1, current, current+1, current+2])
 
+	const work = $page.params.id
+
     type Props = {
-        totalSteps: number;
+        total: number;
     };
-    const  { totalSteps }:Props = $props();
+    const  { total }:Props = $props();
 
 	let hoverstep = $state(1);
 	let left = $state(0);
 	let display = $state("none");
 
 	function forward(){
-		if (current < totalSteps){
+		if (current < total){
 			current++;
 		}
 	}
@@ -42,33 +47,33 @@
 </script>
 <svelte:window/>
 <div class="viewer">
-	<ul class="step-list">
-		{#each steps as $step, i ($step)}
-		<li id="{$step.toString()}" class="step" class:current="{current == $step}" animate:flip="{{ duration: 300, easing: quintOut }}" out:slide="{{ duration: 300, axis: 'x' }}" in:slide="{{ duration: 300, axis: 'x' }}" >
-			
+	<ul class="step-list" transition:slide|global>
+		{#each steps as step, i (step)}
+		<li id="{step.toString()}" class="step" class:current="{current == step}" animate:flip="{{ duration: 3000, easing: quintOut }}" >
+			<Step step={step} total={total} current={current} />
 		</li>
 		{/each}
 	</ul>
-	<button onclick={back} class="viewer-nav viewer-nav-back"><span class="uk-text-large uk-light"></span></button>
-	<button onclick={forward} class="viewer-nav viewer-nav-forward"><span class="uk-text-large uk-light"></span></button>
+	<button onclick={back} class="viewer-nav viewer-nav-back"><ChevronLeft /></button>
+	<button onclick={forward} class="viewer-nav viewer-nav-forward"><ChevronRight /></button>
 </div>
 
 <div class="viewer-toolbar">
-    <div class="toolbar-item uk-width-1-4">
+    <div class="toolbar-item w-1/4">
         <span class="" data-uk-icon="phone"></span>
     </div>
-    <div class="toolbar-stepper uk-width-1-2">
+    <div class="toolbar-stepper w-1/2">
         <div>
             <span class="uk-text-left" data-uk-icon="thumbnails"></span>
         </div>
 		<div class="toolbar-tooltip" style="left: {left}px; display: {display};" >{hoverstep}</div>
-        <input class="steps-slider uk-range uk-width-expand" type="range" bind:value={current} onmousemove={showHoverStep} onmouseout={hideHoverStep} onblur={hideHoverStep} min=1 max={totalSteps} aria-label="Range">
+        <input class="steps-slider w-full" type="range" bind:value={current} onmousemove={showHoverStep} onmouseout={hideHoverStep} onblur={hideHoverStep} min=1 max={total} aria-label="Range">
         <div style="display:inline-flex;">
-            <button onclick={back} ><span ></span></button>
-			<button onclick={forward} ><span ></span></button>
+            <button onclick={back} ><ChevronLeft /></button>
+			<button onclick={forward} ><ChevronRight /></button>
         </div>
     </div>
-    <div class="toolbar-item uk-width-1-4 uk-text-right">
+    <div class="toolbar-item w-1/4 text-right">
         <span data-uk-icon="phone"></span>
     </div>
 </div>
@@ -76,6 +81,7 @@
 <style>
 	.viewer{
 		position:relative;
+		height:100%;
 	}
 	.viewer-nav{
 		opacity:0;
@@ -138,42 +144,15 @@
 
 	}
 	
-	/*.steptools{
-		position:absolute;
-		left:0;
-		top:0;
-	}
-	.stepinfo{
-		position:absolute;
-		left:0;
-		bottom:0;
-		background:linear-gradient(0deg, rgba(0,0,0,0.08), rgba(0,0,0,0));
-		width:100%;
-		padding:5px 20px;
-		min-height:40px;
-		display:flex;
-		flex-direction: row;
-		align-items: baseline;
-		gap:20px;
-	}
-	.number{
-		font-size:0.8rem;
-	}
-	.current-number{
-		font-size:1.6rem;
-	}
-	.description{
-		font-size:0.8rem;
-	}*/
-	
 	.viewer-toolbar{
 		background:#222;
 		color:#ddd;
 		display:flex;
-		
+		width:100%;
         align-items: center;
 		justify-content: center;
 		position:relative;
+		margin-top:auto;
 	}
 
     .toolbar-stepper{
