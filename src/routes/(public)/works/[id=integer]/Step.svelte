@@ -69,7 +69,7 @@
 	}
     
 </script>
-<svelte:window onmousemove={onMouseMove}  onmouseup={onMouseUp}/>
+<svelte:window onmousemove={onMouseMove}  onmouseup={onMouseUp} />
     <div class="viewBox">
         <img bind:this={item} role="presentation" onmousedown={onMouseDown} style:left={left}px style:top={top}px src="{rootUrl.publicUrl}" height="{width}" width="{width}" class="media" alt=""/>
         <!--<object on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;"  role="figure" aria-label="" title="" type="image/svg+xml" data="{rootUrl.publicUrl}" class="media" height="{width}" width="{width}"></object>-->

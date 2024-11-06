@@ -46,11 +46,14 @@
 	
 </script>
 <svelte:window/>
+
+
+
 <div class="viewer">
-	<ul class="step-list" transition:slide|global>
+	<ul class="step-list">
 		{#each steps as step, i (step)}
-		<li id="{step.toString()}" class="step" class:current="{current == step}" animate:flip="{{ duration: 3000, easing: quintOut }}" >
-			<Step step={step} total={total} current={current} />
+		<li id="{step.toString()}" class="step" class:current="{current == step}" transition:slide="{{axis:'x'}}">
+			<Step step={step} total={total} current={current}/>
 		</li>
 		{/each}
 	</ul>
@@ -82,6 +85,10 @@
 	.viewer{
 		position:relative;
 		height:100%;
+		width:100%;
+		padding:0;
+		margin:0;
+		overflow-x: hidden;
 	}
 	.viewer-nav{
 		opacity:0;
@@ -109,39 +116,37 @@
 
 	.step-list{
 		list-style: none;
-		width:100%;
-		overflow-x: hidden;
+		width:150%;
+		padding:0;
+		margin:0;
+		margin-left:-25%;
 		min-height:480px;
 		display:flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
 		position:relative;
-		margin:0;
 		justify-content: center;
-		padding:0;
+		
 	}
 
 	.step{
 		display:flex;
-		flex-basis:25%;
-		min-width:25%;
-		flex-grow:1;
+		width:25%;
+
 		align-items: center;
 		justify-content: center;
 		position:relative;
 		background:#fafafa;
 		height:480px;
 		overflow: hidden;
+		padding:0;
+		margin:0;
 	}
-	
-	.current{
-		box-sizing:border-box;
-		flex-basis:50%;
-		/*min-width:480px;*/
-		min-width:50%;
-		flex-grow:1;
-		background:#ffffff;
 
+	.current{
+		/*min-width:480px;*/
+		width:50%;
+		background:#ffffff;
 	}
 	
 	.viewer-toolbar{
