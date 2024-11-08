@@ -46,13 +46,19 @@
 	
 </script>
 <svelte:window/>
-
+<ul style="display:flex;">
+	{#each steps as step, i (step)}
+	<li id="{step.toString()}"  transition:slide="{{ duration: 3000, axis : "x" }}">
+		{step}
+	</li>
+	{/each}
+</ul>
 
 
 <div class="viewer">
 	<ul class="step-list">
 		{#each steps as step, i (step)}
-		<li id="{step.toString()}" class="step" class:current="{current == step}" transition:slide="{{axis:'x'}}">
+		<li id="{step.toString()}" class="step" class:current="{current == step}" animate:flip="{{ duration: 300, easing: quintOut }}">
 			<Step step={step} total={total} current={current}/>
 		</li>
 		{/each}
@@ -141,12 +147,14 @@
 		overflow: hidden;
 		padding:0;
 		margin:0;
+		transition:all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 	}
 
 	.current{
 		/*min-width:480px;*/
-		width:50%;
+		width: 50%;
 		background:#ffffff;
+		transition:all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 	}
 	
 	.viewer-toolbar{

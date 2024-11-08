@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount, onDestroy, getContext } from 'svelte';
     import { page } from '$app/stores';
+    import { fade } from 'svelte/transition';
     import { Maximize2, Minimize2, Eraser } from 'lucide-svelte'
     //import { current } from './stores'
 
@@ -75,7 +76,7 @@
         <!--<object on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;"  role="figure" aria-label="" title="" type="image/svg+xml" data="{rootUrl.publicUrl}" class="media" height="{width}" width="{width}"></object>-->
     </div>
     {#if step == current}
-    <div class="steptools flex flex-between w-full p-2">
+    <div class="steptools flex flex-between w-full p-2" in:fade={{ delay: 300, duration:100 }}>
         <div class="text-left">
             <button onclick={expand}><Maximize2 strokeWidth={1} /></button>
             <button onclick={shrink}><Minimize2 strokeWidth={1} /></button>
@@ -86,7 +87,7 @@
             <span data-uk-icon="play-circle"></span>
         </div>
     </div>
-    <div class="stepinfo">
+    <div class="stepinfo" in:fade={{ delay: 300, duration:100 }}>
         <div class="number">
             <span class="current-number w-1/6">{step}</span>/{total}
         </div>
