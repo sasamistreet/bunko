@@ -3,14 +3,13 @@
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { flip } from 'svelte/animate';
-	import { ChevronLeft, ChevronRight } from 'lucide-svelte'
+	import { ChevronLeft, ChevronRight, Columns2,Columns3, Fullscreen, Minimize,Maximize2,Minimize2,CircleDashed } from 'lucide-svelte'
 	import Step from './Step.svelte';
-	//import { current, steps } from './stores'
+	//import { current } from './steps.svelte'
 	import { page } from '$app/stores';
 	
     let current = $state(3);
     let steps = $derived([current-2, current-1, current, current+1, current+2])
-
 	const work = $page.params.id
 
     type Props = {
@@ -42,48 +41,46 @@
 		display = "none";
 	}
 
+
 	
 	
 </script>
 <svelte:window/>
-<ul style="display:flex;">
-	{#each steps as step, i (step)}
-	<li id="{step.toString()}"  transition:slide="{{ duration: 3000, axis : "x" }}">
-		{step}
-	</li>
-	{/each}
-</ul>
-
-
 <div class="viewer">
 	<ul class="step-list">
 		{#each steps as step, i (step)}
 		<li id="{step.toString()}" class="step" class:current="{current == step}" animate:flip="{{ duration: 300, easing: quintOut }}">
-			<Step step={step} total={total} current={current}/>
+			{#if step == current}
+			    <Step step={step} total={total} isCurrent={true} >
+				</Step>
+			{:else}
+			    <Step step={step} total={total} isCurrent={false}/>
+			{/if}
 		</li>
 		{/each}
 	</ul>
+	<div class="overlayTools">
+		<button><Maximize2 strokeWidth={1} /></button>
+		<button><Minimize2 strokeWidth={1} /></button>
+		<button><CircleDashed strokeWidth={1} /></button>
+	</div>
 	<button onclick={back} class="viewer-nav viewer-nav-back"><ChevronLeft /></button>
 	<button onclick={forward} class="viewer-nav viewer-nav-forward"><ChevronRight /></button>
 </div>
 
 <div class="viewer-toolbar">
     <div class="toolbar-item w-1/4">
-        <span class="" data-uk-icon="phone"></span>
+        <button onclick={back} ><Columns2 strokeWidth={1}/></button>
     </div>
     <div class="toolbar-stepper w-1/2">
         <div>
             <span class="uk-text-left" data-uk-icon="thumbnails"></span>
         </div>
 		<div class="toolbar-tooltip" style="left: {left}px; display: {display};" >{hoverstep}</div>
-        <input class="steps-slider w-full" type="range" bind:value={current} onmousemove={showHoverStep} onmouseout={hideHoverStep} onblur={hideHoverStep} min=1 max={total} aria-label="Range">
-        <div style="display:inline-flex;">
-            <button onclick={back} ><ChevronLeft /></button>
-			<button onclick={forward} ><ChevronRight /></button>
-        </div>
+        <input class="steps-slider w-full my-2 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" type="range" bind:value={current} onmousemove={showHoverStep} onmouseout={hideHoverStep} onblur={hideHoverStep} min=1 max={total} aria-label="Range">
     </div>
     <div class="toolbar-item w-1/4 text-right">
-        <span data-uk-icon="phone"></span>
+        <button onclick={back} ><Fullscreen strokeWidth={1}/></button>
     </div>
 </div>
 
@@ -158,7 +155,7 @@
 	}
 	
 	.viewer-toolbar{
-		background:#222;
+
 		color:#ddd;
 		display:flex;
 		width:100%;
@@ -174,9 +171,7 @@
 		flex-basis:480px;
 		flex-grow:1;
     }
-	.steps-slider{
-		padding:14px 0;
-	}
+
 	.toolbar-tooltip{
 		position:absolute;
 		bottom:34px;

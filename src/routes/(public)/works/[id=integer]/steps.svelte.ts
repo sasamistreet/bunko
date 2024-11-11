@@ -1,4 +1,5 @@
 
+    
     export let current = $state(3);
     //export let steps = $derived([current-2, current-1, current, current+1, current+2]);
     export function steps(){

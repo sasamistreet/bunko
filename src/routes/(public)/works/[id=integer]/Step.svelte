@@ -2,14 +2,16 @@
     import { onMount, onDestroy, getContext } from 'svelte';
     import { page } from '$app/stores';
     import { fade } from 'svelte/transition';
-    import { Maximize2, Minimize2, Eraser } from 'lucide-svelte'
+    import { Maximize2, Minimize2, CircleDashed, FlipHorizontal2, RotateCw, RotateCcw, MessageSquare, Image, PlaySquare, Shapes} from 'lucide-svelte'
     //import { current } from './stores'
 
-    const { step, total, current } = $props();
+    const { step, total, isCurrent } = $props();
     //let isCurrent = $state(false);
     let left = $state(50);
 	let top = $state(50);
     let scale:number = $state(1);
+    let flipped = $state(false);
+    let commentsOpen = $state(false);
     const work = $page.params.id
 
     const stepData = {};
@@ -38,7 +40,7 @@
         console.log("destroyed")
 	});
 
-    function expand() {
+    export function expand() {
         scale = scale + 0.5;
     }
 
@@ -50,7 +52,17 @@
         scale = 1;
     }
 
+    function flip(){
+
+    }
     
+    function rotateRight(){
+
+    }
+
+    function rotateLeft(){
+
+    }
 
 	let moving = false;
 	function onMouseDown() {
@@ -75,27 +87,33 @@
         <img bind:this={item} role="presentation" onmousedown={onMouseDown} style:left={left}px style:top={top}px src="{rootUrl.publicUrl}" height="{width}" width="{width}" class="media" alt=""/>
         <!--<object on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;"  role="figure" aria-label="" title="" type="image/svg+xml" data="{rootUrl.publicUrl}" class="media" height="{width}" width="{width}"></object>-->
     </div>
-    {#if step == current}
-    <div class="steptools flex flex-between w-full p-2" in:fade={{ delay: 300, duration:100 }}>
+    {#if isCurrent}
+    <div class="steptools flex justify-between w-full p-2" in:fade={{ duration:300 }}>
         <div class="text-left">
             <button onclick={expand}><Maximize2 strokeWidth={1} /></button>
             <button onclick={shrink}><Minimize2 strokeWidth={1} /></button>
-            <button onclick={reset}><Eraser strokeWidth={1} /></button>
+            <button onclick={reset}><CircleDashed strokeWidth={1} /></button>
+        </div>
+        <div class="text-center">
+            <button onclick={expand}><Shapes strokeWidth={1} /></button>
+            <button onclick={expand}><Image strokeWidth={1} /></button>
+            <button onclick={expand}><PlaySquare strokeWidth={1} /></button>
         </div>
         <div class="text-right">
-            <span data-uk-icon="image"></span>
-            <span data-uk-icon="play-circle"></span>
+            <button onclick={expand}><RotateCcw strokeWidth={1} /></button>
+            <button onclick={shrink}><RotateCw strokeWidth={1} /></button>
+            <button onclick={reset}><FlipHorizontal2 strokeWidth={1} /></button>
         </div>
     </div>
-    <div class="stepinfo" in:fade={{ delay: 300, duration:100 }}>
+    <div class="stepinfo" in:fade={{ duration:300 }}>
         <div class="number">
             <span class="current-number w-1/6">{step}</span>/{total}
         </div>
         <p class="description w-full">
             this is description.
         </p>
-        <div class="buttons w-1/6">
-            <span class="mr-2" data-uk-icon="comments"></span>6
+        <div class="buttons">
+            <button onclick={reset}><MessageSquare strokeWidth={1} /></button>
         </div>
     </div>
     {/if}
