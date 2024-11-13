@@ -4,7 +4,7 @@
 	import { quintOut } from 'svelte/easing';
 	import { flip } from 'svelte/animate';
 	import { ChevronLeft, ChevronRight, Columns2,Columns3, Fullscreen, Minimize,Maximize2,Minimize2,CircleDashed } from 'lucide-svelte'
-	import Step from './Step.svelte';
+	import Step, { expand } from './Step.svelte';
 	//import { current } from './steps.svelte'
 	import { page } from '$app/stores';
 	
@@ -20,6 +20,7 @@
 	let hoverstep = $state(1);
 	let left = $state(0);
 	let display = $state("none");
+	
 
 	function forward(){
 		if (current < total){
@@ -41,6 +42,10 @@
 		display = "none";
 	}
 
+	//let instance:any = $state()
+	function expandChild(){
+		expand();
+	}
 
 	
 	
@@ -49,18 +54,13 @@
 <div class="viewer">
 	<ul class="step-list">
 		{#each steps as step, i (step)}
-		<li id="{step.toString()}" class="step" class:current="{current == step}" animate:flip="{{ duration: 300, easing: quintOut }}">
-			{#if step == current}
-			    <Step step={step} total={total} isCurrent={true} >
-				</Step>
-			{:else}
-			    <Step step={step} total={total} isCurrent={false}/>
-			{/if}
+		<li id="{step.toString()}" class="step" class:current="{current == step}" animate:flip="{{ duration: 200, easing: quintOut }}" >
+			    <Step step={step} total={total} current={current} />
 		</li>
 		{/each}
 	</ul>
-	<div class="overlayTools">
-		<button><Maximize2 strokeWidth={1} /></button>
+	<div class="overlayTools ml-48">
+		<button onclick={expandChild}><Maximize2 strokeWidth={1} /></button>
 		<button><Minimize2 strokeWidth={1} /></button>
 		<button><CircleDashed strokeWidth={1} /></button>
 	</div>

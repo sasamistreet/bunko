@@ -1,15 +1,23 @@
+<script module>
+    let isCurrent;
+    let scale:number = $state(1);
+    export function expand() {
+        scale = scale + 0.5;
+    }
+</script>
 <script lang="ts">
-    import { onMount, onDestroy, getContext } from 'svelte';
+    import { onMount, onDestroy, getContext, tick } from 'svelte';
     import { page } from '$app/stores';
     import { fade } from 'svelte/transition';
     import { Maximize2, Minimize2, CircleDashed, FlipHorizontal2, RotateCw, RotateCcw, MessageSquare, Image, PlaySquare, Shapes} from 'lucide-svelte'
     //import { current } from './stores'
 
-    const { step, total, isCurrent } = $props();
+
+    let { step, total, current } = $props();
     //let isCurrent = $state(false);
     let left = $state(50);
 	let top = $state(50);
-    let scale:number = $state(1);
+    
     let flipped = $state(false);
     let commentsOpen = $state(false);
     const work = $page.params.id
@@ -40,12 +48,12 @@
         console.log("destroyed")
 	});
 
-    export function expand() {
-        scale = scale + 0.5;
-    }
+    
 
     function shrink () {
-        scale = scale - 0.5;
+        if (scale > 0.5){
+            scale = scale - 0.5;
+        }
     }
 
     function reset () {
@@ -87,8 +95,8 @@
         <img bind:this={item} role="presentation" onmousedown={onMouseDown} style:left={left}px style:top={top}px src="{rootUrl.publicUrl}" height="{width}" width="{width}" class="media" alt=""/>
         <!--<object on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;"  role="figure" aria-label="" title="" type="image/svg+xml" data="{rootUrl.publicUrl}" class="media" height="{width}" width="{width}"></object>-->
     </div>
-    {#if isCurrent}
-    <div class="steptools flex justify-between w-full p-2" in:fade={{ duration:300 }}>
+    {#if current == step}
+    <div class="steptools flex justify-between w-full p-2" in:fade={{delay:200, duration:100 }}>
         <div class="text-left">
             <button onclick={expand}><Maximize2 strokeWidth={1} /></button>
             <button onclick={shrink}><Minimize2 strokeWidth={1} /></button>
@@ -105,7 +113,7 @@
             <button onclick={reset}><FlipHorizontal2 strokeWidth={1} /></button>
         </div>
     </div>
-    <div class="stepinfo" in:fade={{ duration:300 }}>
+    <div class="stepinfo" in:fade={{ delay:200, duration:100 }}>
         <div class="number">
             <span class="current-number w-1/6">{step}</span>/{total}
         </div>
