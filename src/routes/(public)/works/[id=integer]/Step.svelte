@@ -1,10 +1,4 @@
-<script module>
-    let isCurrent;
-    let scale:number = $state(1);
-    export function expand() {
-        scale = scale + 0.5;
-    }
-</script>
+
 <script lang="ts">
     import { onMount, onDestroy, getContext, tick } from 'svelte';
     import { page } from '$app/stores';
@@ -15,8 +9,8 @@
 
     let { step, total, current } = $props();
     //let isCurrent = $state(false);
-    let left = $state(50);
-	let top = $state(50);
+    let left = $state(0);
+	let top = $state(0);
     
     let flipped = $state(false);
     let commentsOpen = $state(false);
@@ -26,6 +20,8 @@
     const rootUrl = {
         "publicUrl" : ""
     }; 
+    let scale:number = $state(1);
+    
     
     let width = $derived(100 * scale);
     let item: HTMLImageElement;
@@ -48,7 +44,12 @@
         console.log("destroyed")
 	});
 
-    
+    export function expand() {
+        if (step === current){
+            scale = scale + 0.5;
+        }
+        
+    }
 
     function shrink () {
         if (scale > 0.5){
@@ -72,10 +73,10 @@
 
     }
 
-	let moving = false;
+	let moving = $state(false);
+
 	function onMouseDown() {
         moving = true;
-        console.log(moving);
 	}
 
     function onMouseMove(e:MouseEvent) {
@@ -91,7 +92,7 @@
     
 </script>
 <svelte:window onmousemove={onMouseMove}  onmouseup={onMouseUp} />
-    <div class="viewBox">
+    <div class="viewBox" style:width={width}px style:height={width}px>
         <img bind:this={item} role="presentation" onmousedown={onMouseDown} style:left={left}px style:top={top}px src="{rootUrl.publicUrl}" height="{width}" width="{width}" class="media" alt=""/>
         <!--<object on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;"  role="figure" aria-label="" title="" type="image/svg+xml" data="{rootUrl.publicUrl}" class="media" height="{width}" width="{width}"></object>-->
     </div>
@@ -113,7 +114,7 @@
             <button onclick={reset}><FlipHorizontal2 strokeWidth={1} /></button>
         </div>
     </div>
-    <div class="stepinfo" in:fade={{ delay:200, duration:100 }}>
+    <div class="stepinfo" in:fade={{delay:200, duration:100 }}>
         <div class="number">
             <span class="current-number w-1/6">{step}</span>/{total}
         </div>
@@ -128,10 +129,11 @@
     
 <style>
     .viewBox{
-        height: 100%;
-        width: 100%;
         margin:0;
         position:relative;
+        overflow:visible;
+        transition:width 0.3s cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
+        transition:height 0.3s cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
     }
     .media{
         position: absolute;
@@ -139,7 +141,8 @@
         cursor: move;
         user-select: none;
         transform-origin: center;
-        transition:width 0.3s cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
+        transition:width 3s cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
+        transition:height 3s cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
     }
     .steptools{
 		position:absolute;

@@ -4,7 +4,7 @@
 	import { quintOut } from 'svelte/easing';
 	import { flip } from 'svelte/animate';
 	import { ChevronLeft, ChevronRight, Columns2,Columns3, Fullscreen, Minimize,Maximize2,Minimize2,CircleDashed } from 'lucide-svelte'
-	import Step, { expand } from './Step.svelte';
+	import Step from './Step.svelte';
 	//import { current } from './steps.svelte'
 	import { page } from '$app/stores';
 	
@@ -42,9 +42,9 @@
 		display = "none";
 	}
 
-	//let instance:any = $state()
+	let instance:any = $state()
 	function expandChild(){
-		expand();
+		instance.expand();
 	}
 
 	
@@ -54,18 +54,13 @@
 <div class="viewer">
 	<ul class="step-list">
 		{#each steps as step, i (step)}
-		<li id="{step.toString()}" class="step" class:current="{current == step}" animate:flip="{{ duration: 200, easing: quintOut }}" >
-			    <Step step={step} total={total} current={current} />
+		<li id="{step.toString()}" class="step" class:current="{current == step}" animate:flip="{{ duration: 200, easing: quintOut }}" > 
+			<Step step={step} total={total} current={current} bind:this={instance}/>
 		</li>
 		{/each}
 	</ul>
-	<div class="overlayTools ml-48">
-		<button onclick={expandChild}><Maximize2 strokeWidth={1} /></button>
-		<button><Minimize2 strokeWidth={1} /></button>
-		<button><CircleDashed strokeWidth={1} /></button>
-	</div>
-	<button onclick={back} class="viewer-nav viewer-nav-back"><ChevronLeft /></button>
-	<button onclick={forward} class="viewer-nav viewer-nav-forward"><ChevronRight /></button>
+	<button onclick={back} class="viewer-nav viewer-nav-back"><ChevronLeft size={64} strokeWidth={1}/></button>
+	<button onclick={forward} class="viewer-nav viewer-nav-forward"><ChevronRight size={64} strokeWidth={1}/></button>
 </div>
 
 <div class="viewer-toolbar">
@@ -95,12 +90,15 @@
 	}
 	.viewer-nav{
 		opacity:0;
+		color:#FFF;
+		font-size:4rem;
+		display:flex;
+		justify-content: center;
+		align-items:center;
 		position:absolute;
 		top:0%;
 		height:100%;
 		width:12.5%;
-		vertical-align: middle;
-		text-align: center;
 		border:none;
 		transition: all .2s ease-out;
 		background-color: rgba(0,0,0,0.3);
@@ -129,13 +127,11 @@
 		flex-wrap: nowrap;
 		position:relative;
 		justify-content: center;
-		
 	}
 
 	.step{
 		display:flex;
 		width:25%;
-
 		align-items: center;
 		justify-content: center;
 		position:relative;
