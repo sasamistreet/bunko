@@ -24,7 +24,9 @@
     
     
     let width = $derived(100 * scale);
+    let parentWidth:number|undefined = $state();
     let item: HTMLImageElement;
+
     onMount(async() => {
         /*if ( step > 0 && step <= totalstep ){
             stepData = await fetch(`/api/steps?work=${work}&step=${step}`).then( res => res.json() );
@@ -34,10 +36,18 @@
         }
         //URLを取得
         rootUrl = await fetch(`/api/storage?path=${stepData.figure_svg_path}`).then( res => res.json() );
-        item.ondragstart = function() {
+        */item.ondragstart = function() {
             //これをしないとブラウザの機能と競合してドラッグできない
             return false;
-        };*/
+        };
+
+        const parent = item.parentElement;
+        const rect = parent?.getBoundingClientRect();
+        if (rect){
+            parentWidth = rect.width;
+            left = parentWidth / 2;
+            top = rect.height / 2;
+        }
 	});
 
     onDestroy(() => {
@@ -92,8 +102,19 @@
     
 </script>
 <svelte:window onmousemove={onMouseMove}  onmouseup={onMouseUp} />
-    <div class="viewBox" style:width={width}px style:height={width}px>
-        <img bind:this={item} role="presentation" onmousedown={onMouseDown} style:left={left}px style:top={top}px src="{rootUrl.publicUrl}" height="{width}" width="{width}" class="media" alt=""/>
+    <div class="viewBox" id="viewBox{step}" bind:clientWidth={parentWidth}>
+        <img
+            bind:this={item}
+            role="presentation"
+            onmousedown={onMouseDown}
+            style:left={left}px
+            style:top={top}px
+            src="{rootUrl.publicUrl}"
+            height="{width}"
+            width="{width}"
+            class="media"
+            alt=""
+        />
         <!--<object on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;"  role="figure" aria-label="" title="" type="image/svg+xml" data="{rootUrl.publicUrl}" class="media" height="{width}" width="{width}"></object>-->
     </div>
     {#if current == step}
@@ -129,20 +150,18 @@
     
 <style>
     .viewBox{
-        margin:0;
-        position:relative;
-        overflow:visible;
-        transition:width 0.3s cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
-        transition:height 0.3s cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
+        width:100%;
+        height:100%;
     }
     .media{
-        position: absolute;
+        position:absolute;
         user-select: none;
         cursor: move;
         user-select: none;
         transform-origin: center;
-        transition:width 3s cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
-        transition:height 3s cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
+        transform: translateX(-50%) translateY(-50%);
+        transition:width 0.3s cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
+        background:#fefefe;
     }
     .steptools{
 		position:absolute;

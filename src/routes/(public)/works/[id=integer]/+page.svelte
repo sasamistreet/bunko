@@ -9,20 +9,20 @@
 	import { page } from "$app/stores";
 	
     const data = $page.data
-    //const session = data.session
+    const session = data.session
     const work = data.work
     const workId = Number($page.params.id)
 
     const isFree = false;
-    let isLibrary = false;
+    const isLibrary = data.isLibrary;
 
     onMount(() => {
-        checkLibrary();
+        //checkLibrary();
 	});
 
     //setContext('info', { work, total });
 
-    async function checkLibrary() {
+    /*async function checkLibrary() {
 		const library = await fetch(`/api/library/${workId}`).then((res) => res.json());
         console.log(library);
         if ( Object.keys(library.data).length == 0){
@@ -30,19 +30,15 @@
         } else {
             isLibrary = true;
         }
-	}
+	}*/
 
 </script>
 
 <div class="bg-slate-700 items-center">
-    {#if isFree}
-        <Viewer total={100}/>
+    {#if session && isLibrary || isFree}
+        <Viewer total={100}/> 
     {:else}
-        {#if isLibrary}
-            <Viewer total={100} />
-        {:else}
-            <PriceBox workId={workId}/>
-        {/if}
+        <PriceBox workId={workId} />
     {/if}
 </div>
 <div class="md:w-[640px] mx-auto my-4 flex justify-between">
