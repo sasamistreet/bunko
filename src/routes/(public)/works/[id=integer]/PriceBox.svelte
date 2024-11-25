@@ -11,8 +11,8 @@
     };
     let { workId }:Props = $props();
 
-    let addingCart = $state(false);
-    let addingWishlist = $state(false);
+    let addingCart = $state(true);
+    let addingWishlist = $state(true);
     let isCart = $state(false);
     let isWishlist = $state(false);
 
@@ -28,7 +28,7 @@
         work_id:Number,
         Work:WorkInfo
     }
-    onMount(() => {
+    $effect(() => {
         loadCart();
 		loadWishlist();
 	});
@@ -36,10 +36,10 @@
 		const wishlist = await fetch(`/api/wishlist?work=${workId}`).then((res) => res.json());
         if ( Object.keys(wishlist.data).length !== 0){
             isWishlist = true;
-            
         } else {
             isWishlist = false;
         }
+        addingWishlist = false;
 	}
     async function loadCart() {
 		const cart = await fetch(`/api/cart/${workId}`).then((res) => res.json());
@@ -49,6 +49,7 @@
         } else {
             isCart = true;
         }
+        addingCart = false;
 	}
 
 </script>
@@ -100,12 +101,12 @@
                 {/if}
             </Button>
         </form>
-        {:else}
+        {:else}<!-- isWishlist -->
         <Button href="/account/wishlist" variant="link" class="block w-full">
             <BookmarkCheck class="inline mr-2" size={18}></BookmarkCheck>In Wishlist
         </Button>
         {/if}
-    {:else}
+    {:else}<!-- session -->
         <Button href="/login" variant="link" class="block w-full">Login</Button>
     {/if}
 </div>

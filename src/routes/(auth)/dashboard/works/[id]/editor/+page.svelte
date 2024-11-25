@@ -49,13 +49,14 @@
       newSteps.splice(index, 0, deleteElement);
       steps = newSteps
       $dragIndex = null;
+      
     }
 
 </script>
 <div class="flex justify-between">
   <div>
     <Button variant="ghost" size="icon"><BetweenVerticalStart size={16} /></Button>
-    <Button variant="ghost" size="icon"><CheckSquare size="{16}"/></Button>
+    <Button variant="ghost" size="icon"><CheckSquare size={16}/></Button>
     <Button variant="ghost" size="icon"><Trash2 size={16}/></Button>
   </div>
 </div>

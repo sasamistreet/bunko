@@ -17,7 +17,7 @@ async function getSteps(stepId:string){
 
 async function getOrder(workId:string){
   try {
-    const{ data, error } = await supabase.schema('public').from("Work").select().eq('id', workId).select('order_drafted').single();
+    const{ data, error } = await supabase.schema('public').from("work").select().eq('id', workId).select('order_drafted').single();
     if (error) {
       throw error;
     }
@@ -49,5 +49,13 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions: Actions = {
-  
+  default:async({locals:{ supabase }, request})=>{
+    const formdata = await request.formData();
+    try{
+      const { data } = await supabase.from('work').update({order_drafted:formdata.get('order')});
+      return data;
+    }catch{
+
+    }
+  }
 };

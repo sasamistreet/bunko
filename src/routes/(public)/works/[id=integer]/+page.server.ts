@@ -4,13 +4,15 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({locals:{user, supabase}, params}) => {
     try {
         const { data:work } = await supabase.from('work').select(`*, profile(display_name)`).eq('id', params.id).limit(1).single();
-        const library = await supabase.from('library').select().match({'user_id':user?.id, 'work_id': params.id})
+        const {data:library} = await supabase.from('library').select().match({'user_id':user?.id, 'work_id': params.id});
+        const {data:cart} = await supabase.from('cart').select().match({'user_id':user?.id, 'work_id': params.id});
         let isLibrary = false;
-        if ( Object.keys(library).length == 0){
-            isLibrary = false;
-        } else {
+        if (library?.length != 0){
             isLibrary = true;
+        } else {
+            isLibrary = false;
         }
+        let isCart = false;
         return { work, isLibrary }; 
     } catch (error) {
         return { error }

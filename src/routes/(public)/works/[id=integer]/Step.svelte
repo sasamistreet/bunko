@@ -24,31 +24,15 @@
     
     
     let width = $derived(100 * scale);
-    let parentWidth:number|undefined = $state();
+
+    let parent:HTMLElement|null;
+    let rect:DOMRect|undefined;
+    let parentWidth:number|undefined = $state(0);
     let item: HTMLImageElement;
+    
+    
+    
 
-    onMount(async() => {
-        /*if ( step > 0 && step <= totalstep ){
-            stepData = await fetch(`/api/steps?work=${work}&step=${step}`).then( res => res.json() );
-        } else {
-            //ダミー
-            stepData = await fetch(`/api/steps?work=1&step=1`).then( res => res.json() );
-        }
-        //URLを取得
-        rootUrl = await fetch(`/api/storage?path=${stepData.figure_svg_path}`).then( res => res.json() );
-        */item.ondragstart = function() {
-            //これをしないとブラウザの機能と競合してドラッグできない
-            return false;
-        };
-
-        const parent = item.parentElement;
-        const rect = parent?.getBoundingClientRect();
-        if (rect){
-            parentWidth = rect.width;
-            left = parentWidth / 2;
-            top = rect.height / 2;
-        }
-	});
 
     onDestroy(() => {
         console.log("destroyed")
@@ -58,7 +42,6 @@
         if (step === current){
             scale = scale + 0.5;
         }
-        
     }
 
     function shrink () {
@@ -99,6 +82,29 @@
     function onMouseUp() {
         moving = false;
 	}
+    $effect(() => {
+        /*if ( step > 0 && step <= totalstep ){
+            stepData = await fetch(`/api/steps?work=${work}&step=${step}`).then( res => res.json() );
+        } else {
+            //ダミー
+            stepData = await fetch(`/api/steps?work=1&step=1`).then( res => res.json() );
+        }
+        //URLを取得
+        rootUrl = await fetch(`/api/storage?path=${stepData.figure_svg_path}`).then( res => res.json() );
+        */
+        item.ondragstart = function() {
+            //これをしないとブラウザの機能と競合してドラッグできない
+            return false;
+        };
+
+        parent = item.parentElement;
+        rect = parent?.getBoundingClientRect();
+        if (rect){
+            parentWidth = rect.width;
+            left = parentWidth / 2;
+            top = rect.height / 2;
+        }
+    })
     
 </script>
 <svelte:window onmousemove={onMouseMove}  onmouseup={onMouseUp} />
@@ -115,6 +121,7 @@
             class="media"
             alt=""
         />
+
         <!--<object on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;"  role="figure" aria-label="" title="" type="image/svg+xml" data="{rootUrl.publicUrl}" class="media" height="{width}" width="{width}"></object>-->
     </div>
     {#if current == step}
@@ -150,11 +157,14 @@
     
 <style>
     .viewBox{
-        width:100%;
-        height:100%;
+        width:0;
+        height:0;
+        overflow: visible;
+        position: relative;
     }
     .media{
         position:absolute;
+        max-width: none;
         user-select: none;
         cursor: move;
         user-select: none;
