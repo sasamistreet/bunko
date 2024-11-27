@@ -6,6 +6,7 @@
     import { quintOut } from "svelte/easing";
     import { flip } from 'svelte/animate';
     import type { PageData } from './$types';
+    import { enhance } from '$app/forms';
 
     type stepData = {
       id:string,
@@ -49,10 +50,16 @@
       newSteps.splice(index, 0, deleteElement);
       steps = newSteps
       $dragIndex = null;
-      
+      //stepsを保存
     }
 
 </script>
+<form method="POST" action="/" use:enhance={()=>{
+  return async ({ result, update }) => {
+  }
+}}>
+  <input type="hidden" name="steps" value={steps} />
+</form>
 <div class="flex justify-between">
   <div>
     <Button variant="ghost" size="icon"><BetweenVerticalStart size={16} /></Button>

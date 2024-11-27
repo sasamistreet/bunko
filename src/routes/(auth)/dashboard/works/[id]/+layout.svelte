@@ -17,7 +17,7 @@
         </ul>
       </nav>
     </div>
-    <div class="pt-8 bg-muted">
+    <div class="pt-20 px-4 bg-muted">
         {@render children()}
     </div>
   </div>
